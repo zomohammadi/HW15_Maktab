@@ -1,69 +1,69 @@
 package repository.Impl;
 
-import entity.Employee;
+import entity.Student;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import repository.EmployeeRepository;
+import repository.StudentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeRepositoryImpl implements EmployeeRepository {
+public class StudentRepositoryImpl implements StudentRepository {
 
     private final EntityManager entityManager;
     private CriteriaBuilder criteriaBuilder;
 
-    public EmployeeRepositoryImpl(EntityManager entityManager) {
+    public StudentRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
 
     }
 
-    public void save(Employee employee) {
-        if (employee != null) {
+    public void save(Student student) {
+        if (student != null) {
             entityManager.getTransaction().begin();
-            entityManager.persist(employee);
+            entityManager.persist(student);
             entityManager.getTransaction().commit();
         }
     }
 
-    public void update(Employee employee) {
+    public void update(Student student) {
         entityManager.getTransaction().begin();
-        entityManager.merge(employee);
+        entityManager.merge(student);
         entityManager.getTransaction().commit();
     }
 
-    public void delete(Employee employee) {
+    public void delete(Student student) {
         entityManager.getTransaction().begin();
-        //findById(employee.getId());
-        entityManager.remove(employee);
+        //findById(student.getId());
+        entityManager.remove(student);
         entityManager.getTransaction().commit();
     }
 
-    public Employee findById(Long id) {
-        return entityManager.find(Employee.class, id);
+    public Student findById(Long id) {
+        return entityManager.find(Student.class, id);
     }
 
-    public List<Employee> findAll() {
+    public List<Student> findAll() {
         criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Employee> query = criteriaBuilder.createQuery(Employee.class);
-        Root<Employee> employeeRoot = query.from(Employee.class);
+        CriteriaQuery<Student> query = criteriaBuilder.createQuery(Student.class);
+        Root<Student> studentRoot = query.from(Student.class);
         return entityManager.createQuery(query).getResultList();
-        // TypedQuery<Employee> query1 = entityManager.createQuery(query);
+        // TypedQuery<Student> query1 = entityManager.createQuery(query);
     }
 
-    public Employee findByUserNameAndPassword(String userName, String password) {
+    public Student findByUserNameAndPassword(String userName, String password) {
         criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Employee> query = criteriaBuilder.createQuery(Employee.class);
-        Root<Employee> employeeRoot = query.from(Employee.class);
+        CriteriaQuery<Student> query = criteriaBuilder.createQuery(Student.class);
+        Root<Student> studentRoot = query.from(Student.class);
         List<Predicate> predicates = new ArrayList<>();
         if (userName != null) {
-            predicates.add(criteriaBuilder.like(employeeRoot.get("username"), userName));
+            predicates.add(criteriaBuilder.like(studentRoot.get("username"), userName));
         }
         if (password != null) {
-            predicates.add(criteriaBuilder.like(employeeRoot.get("password"), password));
+            predicates.add(criteriaBuilder.like(studentRoot.get("password"), password));
         }
         if (!predicates.isEmpty()) {
             query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
