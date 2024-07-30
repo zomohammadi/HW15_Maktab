@@ -7,14 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-public class User extends BaseEntity implements Serializable {
+public class User extends BaseEntity{
 
     public static final String FIRST_NAME = "first_Name";
     public static final String LAST_NAME = "last_Name";

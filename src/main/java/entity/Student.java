@@ -8,15 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Entity
 @Table(name = Student.TABLE_NAME)
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student extends User implements Serializable {
+public class Student extends User {
 
     public static final String TABLE_NAME = "student";
 

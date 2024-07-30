@@ -9,15 +9,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Entity
 @Table(name = Term.TABLE_NAME)
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Term extends BaseEntity implements Serializable {
+public class Term extends BaseEntity{
 
     public static final String TABLE_NAME = "term";
     public static final String TERM_VALUE = "term_value";
