@@ -3,9 +3,25 @@ package util;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import repository.EmployeeRepository;
+import repository.Impl.EmployeeRepositoryImpl;
+import service.EmployeeService;
+import service.Impl.EmployeeServiceImpl;
 
 public class ApplicationContext {
-    private ApplicationContext() {
+
+    private EntityManagerFactory enf;
+    private EntityManager em;
+
+    private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
+
+    public ApplicationContext() {
+        this.em = getEntityManager();
+        employeeRepository = new EmployeeRepositoryImpl(em);
+
+        employeeService = new EmployeeServiceImpl(employeeRepository);
+
     }
 
     private static ApplicationContext applicationContext;
@@ -17,14 +33,12 @@ public class ApplicationContext {
         return applicationContext;
     }
 
-    private EntityManagerFactory emf;
-    private EntityManager em;
 
     public EntityManagerFactory getEntityManagerFactory() {
-        if (emf == null) {
-            emf = Persistence.createEntityManagerFactory("default");
+        if (enf == null) {
+            enf = Persistence.createEntityManagerFactory("default");
         }
-        return emf;
+        return enf;
     }
 
     public EntityManager getEntityManager() {
@@ -32,5 +46,9 @@ public class ApplicationContext {
             em = getEntityManagerFactory().createEntityManager();
         }
         return em;
+    }
+
+    public EmployeeService getEmployeeService() {
+        return employeeService;
     }
 }

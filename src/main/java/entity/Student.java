@@ -1,15 +1,15 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = Student.TABLE_NAME)
+@Table(name = Student.TABLE_NAME, indexes = {
+        @Index(name = "unique_index_"+Student.TABLE_NAME,columnList = User.USERNAME+","+ User.PASSWORD,unique = true)
+})
 @Setter
 @Getter
 @AllArgsConstructor
@@ -22,7 +22,7 @@ public class Student extends User {
     public static final String ENTERING_YEAR = "entering_year";
 
 
-    @Column(name = STUDENT_CODE)
+    @Column(name = STUDENT_CODE,unique = true)
     private String studentCode;
 
 
