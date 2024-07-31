@@ -2,17 +2,19 @@ package service.Impl;
 
 import entity.Teacher;
 import jakarta.persistence.NoResultException;
-import repository.TeacherRepository;
+import repository.BaseEntityRepository;
 import service.TeacherService;
 
 import java.util.List;
 
 public class TeacherServiceImpl implements TeacherService {
-    private final TeacherRepository teacherRepository;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    private BaseEntityRepository<Teacher> teacherRepository;
+
+    public TeacherServiceImpl(BaseEntityRepository<Teacher> teacherRepository) {
         this.teacherRepository = teacherRepository;
     }
+
 
     @Override
     public void save(Teacher teacher) {

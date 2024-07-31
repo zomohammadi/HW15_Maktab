@@ -1,18 +1,23 @@
 package util;
 
+import entity.Employee;
+import entity.Lesson;
+import entity.Student;
+import entity.Teacher;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import repository.EmployeeRepository;
+import repository.BaseEntityRepository;
 import repository.Impl.EmployeeRepositoryImpl;
+import repository.Impl.LessonRepositoryImpl;
 import repository.Impl.StudentRepositoryImpl;
 import repository.Impl.TeacherRepositoryImpl;
-import repository.StudentRepository;
-import repository.TeacherRepository;
 import service.EmployeeService;
 import service.Impl.EmployeeServiceImpl;
+import service.Impl.LessonServiceImpl;
 import service.Impl.StudentServiceImpl;
 import service.Impl.TeacherServiceImpl;
+import service.LessonService;
 import service.StudentService;
 import service.TeacherService;
 
@@ -24,16 +29,23 @@ public class ApplicationContext {
     private final EmployeeService employeeService;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final LessonService lessonService;
 
     public ApplicationContext() {
         this.em = getEntityManager();
-        EmployeeRepository employeeRepository = new EmployeeRepositoryImpl(em);
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl(em);
-        StudentRepository studentRepository = new StudentRepositoryImpl(em);
+      //  EmployeeRepository employeeRepository = new EmployeeRepositoryImpl(em);
+
+       // BaseEntityRepository<Employee> employeeRepository = new BaseEntityRepositoryImpl<>(em);
+
+        BaseEntityRepository<Employee> employeeRepository = new EmployeeRepositoryImpl(em);
+        BaseEntityRepository<Teacher> teacherRepository = new TeacherRepositoryImpl(em);
+        BaseEntityRepository<Student> studentRepository = new StudentRepositoryImpl(em);
+        BaseEntityRepository<Lesson> lessonRepository = new LessonRepositoryImpl(em);
 
         employeeService = new EmployeeServiceImpl(employeeRepository);
         teacherService = new TeacherServiceImpl(teacherRepository);
         studentService = new StudentServiceImpl(studentRepository);
+        lessonService = new LessonServiceImpl(lessonRepository);
 
     }
 
@@ -71,5 +83,9 @@ public class ApplicationContext {
 
     public StudentService getStudentService() {
         return studentService;
+    }
+
+    public LessonService getLessonService() {
+        return lessonService;
     }
 }

@@ -2,48 +2,48 @@ package service.Impl;
 
 import entity.Student;
 import jakarta.persistence.NoResultException;
-import repository.StudentRepository;
+import repository.BaseEntityRepository;
 import service.StudentService;
 
 import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
-    private StudentRepository employeeRepository;
+    private BaseEntityRepository<Student> studentRepository;
 
-    public StudentServiceImpl(StudentRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public StudentServiceImpl(BaseEntityRepository<Student> studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
     @Override
     public void save(Student employee) {
-        employeeRepository.save(employee);
+        studentRepository.save(employee);
     }
 
     @Override
     public void update(Student employee) {
-        employeeRepository.update(employee);
+        studentRepository.update(employee);
     }
 
     @Override
     public void delete(Student employee) {
-        employeeRepository.delete(employee);
+        studentRepository.delete(employee);
     }
 
     @Override
     public Student findById(Long id) {
-        return employeeRepository.findById(id);
+        return studentRepository.findById(id);
     }
 
     @Override
     public List<Student> findAll() {
-        return employeeRepository.findAll();
+        return studentRepository.findAll();
     }
 
     @Override
     public Student findByUserNameAndPassword(String userName, String password) {
         try {
 
-            return employeeRepository.findByUserNameAndPassword(userName, password);
+            return studentRepository.findByUserNameAndPassword(userName, password);
         } catch (NoResultException e) {
             System.out.println("No result found");
             return null;

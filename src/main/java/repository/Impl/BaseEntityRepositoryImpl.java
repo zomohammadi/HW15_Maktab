@@ -1,68 +1,60 @@
-
 package repository.Impl;
 
-import entity.Employee;
+import entity.BaseEntity;
 import jakarta.persistence.EntityManager;
-import repository.EmployeeRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import repository.BaseEntityRepository;
 
-public class EmployeeRepositoryImpl extends BaseEntityRepositoryImpl<Employee> implements EmployeeRepository {
-    public EmployeeRepositoryImpl(EntityManager entityManager) {
-        super(entityManager);
-    }
+import java.util.ArrayList;
+import java.util.List;
 
-    @Override
-    public Class<Employee> getEntityClass() {
-        return Employee.class;
-    }
-
-}
-
-  /*
+public abstract class BaseEntityRepositoryImpl<T extends BaseEntity> implements BaseEntityRepository<T> {
     private final EntityManager entityManager;
     private CriteriaBuilder criteriaBuilder;
 
-    public EmployeeRepositoryImpl(EntityManager entityManager) {
+    public BaseEntityRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-
     }
 
-    public void save(Employee employee) {
-        if (employee != null) {
+    public void save(T t) {
+        if (t != null) {
             entityManager.getTransaction().begin();
-            entityManager.persist(employee);
+            entityManager.persist(t);
             entityManager.getTransaction().commit();
         }
     }
 
-    public void update(Employee employee) {
+    public void update(T t) {
         entityManager.getTransaction().begin();
-        entityManager.merge(employee);
+        entityManager.merge(t);
         entityManager.getTransaction().commit();
     }
 
-    public void delete(Employee employee) {
+    public void delete(T t) {
         entityManager.getTransaction().begin();
-        //findById(employee.getId());
-        entityManager.remove(employee);
+        entityManager.remove(t);
         entityManager.getTransaction().commit();
     }
 
-    public Employee findById(Long id) {
-        return entityManager.find(Employee.class, id);
-    }
-
-    public List<Employee> findAll() {
+    public List<T> findAll() {
         criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Employee> query = criteriaBuilder.createQuery(Employee.class);
-        Root<Employee> employeeRoot = query.from(Employee.class);
+        CriteriaQuery<T> query = criteriaBuilder.createQuery(getEntityClass());
+        Root<T> employeeRoot = query.from(getEntityClass());
         return entityManager.createQuery(query).getResultList();
         // TypedQuery<Employee> query1 = entityManager.createQuery(query);
     }
 
-    public Employee findByUserNameAndPassword(String userName, String password) {
+    public T findById(Long id) {
+        return entityManager.find(getEntityClass(), id);
+    }
+
+    public T findByUserNameAndPassword(String userName, String password) {
         criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Employee> query = criteriaBuilder.createQuery(Employee.class);
-        Root<Employee> employeeRoot = query.from(Employee.class);
+        CriteriaQuery<T> query = criteriaBuilder.createQuery(getEntityClass());
+        Root<T> employeeRoot = query.from(getEntityClass());
         List<Predicate> predicates = new ArrayList<>();
         if (userName != null) {
             predicates.add(criteriaBuilder.like(employeeRoot.get("username"), userName));
@@ -74,6 +66,7 @@ public class EmployeeRepositoryImpl extends BaseEntityRepositoryImpl<Employee> i
             query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
         }
         return entityManager.createQuery(query).getSingleResult();
-    }*/
+    }
 
-
+    public abstract Class<T> getEntityClass();
+}
