@@ -1,6 +1,7 @@
 package repository.Impl;
 
 import entity.BaseEntity;
+import entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -57,10 +58,10 @@ public abstract class BaseEntityRepositoryImpl<T extends BaseEntity> implements 
         Root<T> employeeRoot = query.from(getEntityClass());
         List<Predicate> predicates = new ArrayList<>();
         if (userName != null) {
-            predicates.add(criteriaBuilder.like(employeeRoot.get("username"), userName));
+            predicates.add(criteriaBuilder.like(employeeRoot.get(User.USERNAME), userName));
         }
         if (password != null) {
-            predicates.add(criteriaBuilder.like(employeeRoot.get("password"), password));
+            predicates.add(criteriaBuilder.like(employeeRoot.get(User.PASSWORD), password));
         }
         if (!predicates.isEmpty()) {
             query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
@@ -69,4 +70,16 @@ public abstract class BaseEntityRepositoryImpl<T extends BaseEntity> implements 
     }
 
     public abstract Class<T> getEntityClass();
+
+    public CriteriaBuilder getCriteriaBuilder() {
+        return criteriaBuilder;
+    }
+
+    public void setCriteriaBuilder(CriteriaBuilder criteriaBuilder) {
+        this.criteriaBuilder = criteriaBuilder;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }
