@@ -2,17 +2,19 @@ package service.Impl;
 
 import entity.Employee;
 import jakarta.persistence.NoResultException;
-import repository.EmployeeRepository;
+import repository.BaseEntityRepository;
 import service.EmployeeService;
 
 import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
-    private EmployeeRepository employeeRepository;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    private BaseEntityRepository<Employee> employeeRepository;
+
+    public EmployeeServiceImpl(BaseEntityRepository<Employee> employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
+
 
     @Override
     public void save(Employee employee) {
