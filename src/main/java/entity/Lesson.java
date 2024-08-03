@@ -6,10 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = Lesson.TABLE_NAME)
-
+@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,5 +27,11 @@ public class Lesson extends BaseEntity {
     @Column(name = UNIT)
     private Integer unit;
 
-
+    @Override
+    public String toString() {
+        return "Lesson{" +
+               "title='" + title +
+               ", unit=" + unit +
+               '}';
+    }
 }

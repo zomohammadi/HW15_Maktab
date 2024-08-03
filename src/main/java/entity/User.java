@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass()
-
+@SuperBuilder
 public class User extends BaseEntity{
 
     public static final String FIRST_NAME = "first_Name";

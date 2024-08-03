@@ -1,9 +1,7 @@
 package entity;
 
 import enumration.TermValue;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +21,7 @@ public class Term extends BaseEntity{
     public static final String IS_ACTIVE = "is_active";
 
     @Column(name = TERM_VALUE)
+    @Enumerated(EnumType.STRING)
     private TermValue termValue;
 
     @Column(name = YEAR)
@@ -31,5 +30,12 @@ public class Term extends BaseEntity{
     @Column(name = IS_ACTIVE)
     private boolean isActive;
 
-
+    @Override
+    public String toString() {
+        return "Term{" +
+               "termValue=" + termValue +
+               ", year=" + year +
+               ", isActive=" + isActive +
+               '}';
+    }
 }

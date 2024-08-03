@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = Student.TABLE_NAME, indexes = {
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class Student extends User {
 
     public static final String TABLE_NAME = "student";
@@ -29,6 +31,15 @@ public class Student extends User {
     @Column(name = ENTERING_YEAR)
     private Integer enteringYear;
 
-
-
+    @Override
+    public String toString() {
+        return "Student{" +
+               " FirstName= " + super.getFirstName()
+               + ", LastName= " + super.getLastName()
+               + ", MobileNumber= " + super.getMobileNumber()
+               + ", NationalCode= " + super.getNationalCode()
+               + ", studentCode='" + studentCode + '\'' +
+               ", enteringYear=" + enteringYear +
+               '}';
+    }
 }

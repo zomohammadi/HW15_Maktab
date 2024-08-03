@@ -1,18 +1,16 @@
 package entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = Course.TABLE_NAME)
-
+@SuperBuilder
 @Setter
 @Getter
 @AllArgsConstructor
@@ -25,14 +23,17 @@ public class Course extends BaseEntity{
     @Column(name = CAPACITY)
     private Integer capacity;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn
   //  @JoinColumn(name = TEACHER_ID)
     private Teacher teacher;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn
     private Term term;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn
     private Lesson lesson;
 
 }

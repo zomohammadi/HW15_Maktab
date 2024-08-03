@@ -28,10 +28,22 @@ public class Teacher extends User{
     private String teacherCode;
 
     @Column(name = TEACHER_TYPE)
+    @Enumerated(EnumType.STRING)
     private TeacherType teacherType;
 
     @Column(name = BASE_SALARY)
     private Double baseSalary;
 
-
+    @Override
+    public String toString() {
+        return "Teacher{" +
+               " FirstName= " + super.getFirstName()
+               + ", LastName= " + super.getLastName()
+               + ", MobileNumber= " + super.getMobileNumber()
+               + ", NationalCode= " + super.getNationalCode()
+               + ", teacherCode='" + teacherCode +
+               ", teacherType=" + teacherType +
+               ", baseSalary=" + baseSalary +
+               '}';
+    }
 }
