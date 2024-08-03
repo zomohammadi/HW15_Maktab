@@ -8,18 +8,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import repository.BaseEntityRepository;
-import repository.Impl.EmployeeRepositoryImpl;
-import repository.Impl.LessonRepositoryImpl;
-import repository.Impl.StudentRepositoryImpl;
-import repository.Impl.TeacherRepositoryImpl;
-import service.EmployeeService;
-import service.Impl.EmployeeServiceImpl;
-import service.Impl.LessonServiceImpl;
-import service.Impl.StudentServiceImpl;
-import service.Impl.TeacherServiceImpl;
-import service.LessonService;
-import service.StudentService;
-import service.TeacherService;
+import repository.Impl.*;
+import repository.SelectUnitRepository;
+import service.*;
+import service.Impl.*;
 
 public class ApplicationContext {
 
@@ -30,6 +22,8 @@ public class ApplicationContext {
     private final TeacherService teacherService;
     private final StudentService studentService;
     private final LessonService lessonService;
+
+    private final SelectUnitService selectUnitService;
 
     public ApplicationContext() {
         this.em = getEntityManager();
@@ -42,11 +36,14 @@ public class ApplicationContext {
         BaseEntityRepository<Student> studentRepository = new StudentRepositoryImpl(em);
         BaseEntityRepository<Lesson> lessonRepository = new LessonRepositoryImpl(em);
 
+        SelectUnitRepository selectUnitRepository = new SelectUnitRepositoryImpl(em);
+
         employeeService = new EmployeeServiceImpl(employeeRepository);
         teacherService = new TeacherServiceImpl(teacherRepository);
         studentService = new StudentServiceImpl(studentRepository);
         lessonService = new LessonServiceImpl(lessonRepository);
 
+        selectUnitService = new SelectUnitServiceImpl(selectUnitRepository);
     }
 
     private static ApplicationContext applicationContext;
@@ -87,5 +84,8 @@ public class ApplicationContext {
 
     public LessonService getLessonService() {
         return lessonService;
+    }
+    public SelectUnitService getSelectUnitService() {
+        return selectUnitService;
     }
 }
