@@ -19,12 +19,12 @@ public class SelectUnit extends BaseEntity {
 
 public static final String TABLE_NAME ="SelectUnit" ;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Student student;
    // private Set<Student> student;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Course course;
     //private Set<Course> course;

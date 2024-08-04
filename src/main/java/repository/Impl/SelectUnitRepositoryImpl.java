@@ -2,10 +2,7 @@ package repository.Impl;
 
 import entity.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import repository.SelectUnitRepository;
 
 import java.util.HashMap;
@@ -76,26 +73,59 @@ public class SelectUnitRepositoryImpl extends BaseEntityRepositoryImpl<SelectUni
         return resultMap;
     }
 
-    public Double getAvg(Long studentId, Long termId) {
+    public void saveUnitSelection(Student student, Course course) {
+        SelectUnit selectUnit = SelectUnit.builder().course(course).student(student).build();
+        EntityManager entityManager = getEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(selectUnit);
+        entityManager.getTransaction().commit();
+    }
 
-        Map<Map<String, Integer>, Double> lessonWithScore = getLessonWithScore(studentId, termId);
+    public boolean isPassLessonInPreviousTerms(Long studentId, Course course) {
+        Long lessonId = course.getLesson().getId();
+     /*
+     select count(l.id) from selectunit u
+     join student s on u.student_id = s.id
+     join course c on u.course_id = c.id
+     join lesson l on c.lesson_id = l.id
+     join term t on c.term_id= t.id
+     where u.score >10 and c.term_id<(select max(g.id) from term g) and s.id =studentId and l.id = lessonId
 
-        double sumScore = 0;
-        double sumUnit = 0;
+      */
 
-        for (Map.Entry<Map<String, Integer>, Double> entry : lessonWithScore.entrySet()) {
-            Map<String, Integer> key = entry.getKey();
-            Double score = 0.0;
-            for (Map.Entry<String, Integer> internalEntry : key.entrySet()) {
-                sumUnit += internalEntry.getValue();
-                score = entry.getValue() * internalEntry.getValue();
-            }
-            sumScore += score;
-        }
-        return sumScore / sumUnit;
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<SelectUnit> selectUnitRoot = query.from(SelectUnit.class);
+
+        //join
+        Join<SelectUnit, Student> student = selectUnitRoot.join("student");
+        Join<SelectUnit, Course> course1 = selectUnitRoot.join("course");
+        Join<Course, Lesson> lesson = course1.join("lesson");
+        Join<Course, Term> term = course1.join("term");
+
+        //Subquery
+        Subquery<Long> subquery = query.subquery(Long.class);
+        Root<Term> termRoot = subquery.from(Term.class);
+        subquery.select(criteriaBuilder.max(termRoot.get("id")));
+
+        //predicate
+        Predicate score = criteriaBuilder.gt(selectUnitRoot.get("score"), 10);
+        Predicate termId = criteriaBuilder.lt(term.get("id"), subquery);
+        Predicate equalStudent = criteriaBuilder.equal(student.get("id"), studentId);
+        Predicate equalLesson = criteriaBuilder.equal(lesson.get("id"), lessonId);
+
+        //where
+        query.select(criteriaBuilder.count(lesson.get("id")))
+                .where(criteriaBuilder.and(score, termId, equalStudent, equalLesson));
+
+        //count(l.id)
+        Long countID = getEntityManager().createQuery(query).getSingleResult();
+        return countID == 1;
     }
 
 }
+
 
 //----------------------------------------------------------------------------2
 /*

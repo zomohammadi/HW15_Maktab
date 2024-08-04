@@ -1,13 +1,11 @@
 package util;
 
-import entity.Employee;
-import entity.Lesson;
-import entity.Student;
-import entity.Teacher;
+import entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import repository.BaseEntityRepository;
+import repository.CourseRepository;
 import repository.Impl.*;
 import repository.SelectUnitRepository;
 import service.*;
@@ -24,12 +22,13 @@ public class ApplicationContext {
     private final LessonService lessonService;
 
     private final SelectUnitService selectUnitService;
+    private final CourseService courseService;
 
     public ApplicationContext() {
         this.em = getEntityManager();
-      //  EmployeeRepository employeeRepository = new EmployeeRepositoryImpl(em);
+        //  EmployeeRepository employeeRepository = new EmployeeRepositoryImpl(em);
 
-       // BaseEntityRepository<Employee> employeeRepository = new BaseEntityRepositoryImpl<>(em);
+        // BaseEntityRepository<Employee> employeeRepository = new BaseEntityRepositoryImpl<>(em);
 
         BaseEntityRepository<Employee> employeeRepository = new EmployeeRepositoryImpl(em);
         BaseEntityRepository<Teacher> teacherRepository = new TeacherRepositoryImpl(em);
@@ -37,6 +36,9 @@ public class ApplicationContext {
         BaseEntityRepository<Lesson> lessonRepository = new LessonRepositoryImpl(em);
 
         SelectUnitRepository selectUnitRepository = new SelectUnitRepositoryImpl(em);
+        CourseRepository courseRepository = new CourseRepositoryImpl(em);
+
+        BaseEntityRepository<Course> baseEntityRepositoryCourse = new CourseRepositoryImpl(em);
 
         employeeService = new EmployeeServiceImpl(employeeRepository);
         teacherService = new TeacherServiceImpl(teacherRepository);
@@ -44,6 +46,7 @@ public class ApplicationContext {
         lessonService = new LessonServiceImpl(lessonRepository);
 
         selectUnitService = new SelectUnitServiceImpl(selectUnitRepository);
+        courseService = new CourseServiceImpl(courseRepository,baseEntityRepositoryCourse );
     }
 
     private static ApplicationContext applicationContext;
@@ -85,7 +88,12 @@ public class ApplicationContext {
     public LessonService getLessonService() {
         return lessonService;
     }
+
     public SelectUnitService getSelectUnitService() {
         return selectUnitService;
+    }
+
+    public CourseService getCourseService() {
+        return courseService;
     }
 }
