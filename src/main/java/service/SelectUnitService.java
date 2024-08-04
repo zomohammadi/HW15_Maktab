@@ -1,5 +1,8 @@
 package service;
 
+import entity.Course;
+import entity.Student;
+
 import java.util.Map;
 
 public interface SelectUnitService {
@@ -7,5 +10,8 @@ public interface SelectUnitService {
     // List<SelectUnit> getLessonWithScore(Long studentId, Long termId);
 
     Double getAvg(Long studentId, Long termId);
+    void saveUnitSelection(Student student, Course course);
+    boolean isPassLessonInPreviousTerms(Long studentId, Course course);
+    int getMaxSelectUnit(Long studentID, Long termId);
 
 }
