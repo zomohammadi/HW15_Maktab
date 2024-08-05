@@ -53,20 +53,26 @@ public abstract class BaseEntityRepositoryImpl<T extends BaseEntity> implements 
     }
 
     public T findByUserNameAndPassword(String userName, String password) {
-        criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = criteriaBuilder.createQuery(getEntityClass());
-        Root<T> employeeRoot = query.from(getEntityClass());
-        List<Predicate> predicates = new ArrayList<>();
-        if (userName != null) {
-            predicates.add(criteriaBuilder.like(employeeRoot.get(User.USERNAME), userName));
+        try {
+            criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<T> query = criteriaBuilder.createQuery(getEntityClass());
+            Root<T> employeeRoot = query.from(getEntityClass());
+            List<Predicate> predicates = new ArrayList<>();
+            if (userName != null) {
+                predicates.add(criteriaBuilder.like(employeeRoot.get(User.USERNAME), userName));
+            }
+            if (password != null) {
+                predicates.add(criteriaBuilder.like(employeeRoot.get(User.PASSWORD), password));
+            }
+            if (!predicates.isEmpty()) {
+                query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+            }
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (Exception e) {
+            System.out.println("");
+            return null;
         }
-        if (password != null) {
-            predicates.add(criteriaBuilder.like(employeeRoot.get(User.PASSWORD), password));
-        }
-        if (!predicates.isEmpty()) {
-            query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-        }
-        return entityManager.createQuery(query).getSingleResult();
+
     }
 
     public abstract Class<T> getEntityClass();

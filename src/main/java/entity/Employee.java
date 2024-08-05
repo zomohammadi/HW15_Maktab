@@ -35,7 +35,8 @@ public class Employee extends User {
     @Override
     public String toString() {
         return "Employee{" +
-                " FirstName= " + super.getFirstName()
+               " UserName= " + super.getUsername()
+                +" ,FirstName= " + super.getFirstName()
                 + ", LastName= " + super.getLastName()
                 + ", MobileNumber= " + super.getMobileNumber()
                 + ", NationalCode= " + super.getNationalCode()

@@ -20,8 +20,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void save(Employee employee) {
         try {
             employeeRepository.save(employee);
-        }catch (Exception e){
-            System.out.println("not save => "+e.getMessage() );
+        } catch (Exception e) {
+            System.out.println("not save => " + e.getMessage());
         }
     }
 
@@ -31,8 +31,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void delete(Employee employee) {
-        employeeRepository.delete(employee);
+    public void delete(Long id) {
+        try {
+            Employee employee = findById(id);
+            employeeRepository.delete(employee);
+        } catch (Exception e) {
+            System.out.println("not Deleted!  " + e.getMessage());
+        }
     }
 
     @Override
