@@ -4,6 +4,7 @@ import entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import menu.*;
 import repository.BaseEntityRepository;
 import repository.CourseRepository;
 import repository.Impl.*;
@@ -23,6 +24,14 @@ public class ApplicationContext {
 
     private final SelectUnitService selectUnitService;
     private final CourseService courseService;
+
+    private final MainMenu mainMenu;
+    private final LoginMenu loginMenu;
+    private final ItemsMenu itemsMenu;
+
+    private final EmployeeMenu employeeMenu;
+    private final TeacherMenu teacherMenu;
+    private final StudentMenu studentMenu;
 
     public ApplicationContext() {
         this.em = getEntityManager();
@@ -47,6 +56,14 @@ public class ApplicationContext {
 
         selectUnitService = new SelectUnitServiceImpl(selectUnitRepository);
         courseService = new CourseServiceImpl(courseRepository,baseEntityRepositoryCourse );
+
+        //menu
+        this.employeeMenu = new EmployeeMenu(this.employeeService,teacherService,studentService);
+        this.teacherMenu=new TeacherMenu();
+        this.studentMenu=new StudentMenu();
+        this.itemsMenu=new ItemsMenu(employeeMenu,teacherMenu,studentMenu);
+        this.loginMenu = new LoginMenu(this.employeeService,teacherService,studentService);
+        this.mainMenu = new MainMenu(this.loginMenu, this.itemsMenu);
     }
 
     private static ApplicationContext applicationContext;
@@ -95,5 +112,30 @@ public class ApplicationContext {
 
     public CourseService getCourseService() {
         return courseService;
+    }
+
+
+    public MainMenu getMainMenu() {
+        return mainMenu;
+    }
+
+    public ItemsMenu getItemsMenu() {
+        return itemsMenu;
+    }
+
+    public LoginMenu getLoginMenu() {
+        return loginMenu;
+    }
+
+    public EmployeeMenu getEmployeeMenu() {
+        return employeeMenu;
+    }
+
+    public TeacherMenu getTeacherMenu() {
+        return teacherMenu;
+    }
+
+    public StudentMenu getStudentMenu() {
+        return studentMenu;
     }
 }

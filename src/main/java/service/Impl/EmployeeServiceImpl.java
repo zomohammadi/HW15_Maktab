@@ -18,7 +18,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void save(Employee employee) {
-        employeeRepository.save(employee);
+        try {
+            employeeRepository.save(employee);
+        }catch (Exception e){
+            System.out.println("not save => "+e.getMessage() );
+        }
     }
 
     @Override
