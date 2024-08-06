@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import menu.*;
 import repository.BaseEntityRepository;
+import repository.CountUnitRepository;
 import repository.CourseRepository;
 import repository.Impl.*;
 import repository.SelectUnitRepository;
@@ -24,6 +25,8 @@ public class ApplicationContext {
 
     private final SelectUnitService selectUnitService;
     private final CourseService courseService;
+
+    private final CountUnitService countUnitService;
 
     private final MainMenu mainMenu;
     private final LoginMenu loginMenu;
@@ -46,8 +49,10 @@ public class ApplicationContext {
 
         SelectUnitRepository selectUnitRepository = new SelectUnitRepositoryImpl(em);
         CourseRepository courseRepository = new CourseRepositoryImpl(em);
+        CountUnitRepository countUnitRepository = new CountUnitRepositoryImpl(em);
 
         BaseEntityRepository<Course> baseEntityRepositoryCourse = new CourseRepositoryImpl(em);
+        BaseEntityRepository<CountUnit> baseEntityRepositoryCountUnit = new CountUnitRepositoryImpl(em);
 
         employeeService = new EmployeeServiceImpl(employeeRepository);
         teacherService = new TeacherServiceImpl(teacherRepository);
@@ -56,6 +61,7 @@ public class ApplicationContext {
 
         selectUnitService = new SelectUnitServiceImpl(selectUnitRepository);
         courseService = new CourseServiceImpl(courseRepository, baseEntityRepositoryCourse);
+        countUnitService = new CountUnitServiceImpl(baseEntityRepositoryCountUnit, countUnitRepository);
 
         //menu
         this.employeeMenu = new EmployeeMenu(this.employeeService, teacherService, studentService);
@@ -114,6 +120,9 @@ public class ApplicationContext {
         return courseService;
     }
 
+    public CountUnitService getCountUnitService() {
+        return countUnitService;
+    }
 
     public MainMenu getMainMenu() {
         return mainMenu;

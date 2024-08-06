@@ -26,7 +26,8 @@ public class SelectUnitServiceImpl implements SelectUnitService {
 
         double sumScore = 0;
         double sumUnit = 0;
-
+        if (lessonWithScore.size() == 0)
+            return 0.0;
         for (Map.Entry<Map<String, Integer>, Double> entry : lessonWithScore.entrySet()) {
             Map<String, Integer> key = entry.getKey();
             Double score = 0.0;

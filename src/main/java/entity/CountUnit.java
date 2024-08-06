@@ -1,8 +1,6 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,10 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = CountUnit.TABLE_NAME)
+@Table(name = CountUnit.TABLE_NAME,
+        indexes = {
+                @Index(name = "unique_index_" + CountUnit.TABLE_NAME, columnList = CountUnit.STUDENT_ID + "," + CountUnit.TERM_ID, unique = true)
+        })
 
 @SuperBuilder
 
@@ -21,13 +22,19 @@ import lombok.experimental.SuperBuilder;
 
 public class CountUnit extends BaseEntity {
     public static final String TABLE_NAME = "countunit";
+    public static final String STUDENT_ID = "student_id";
+    public static final String TERM_ID = "term_id";
+    public static final String Count_Of_Selected_Unit = "count_of_selected_unit";
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = STUDENT_ID)
     private Student student;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = TERM_ID)
     private Term term;
 
-    private Integer count;
+    @Column(name = Count_Of_Selected_Unit)
+    private Integer countOfSelectedUnit;
 
 }
