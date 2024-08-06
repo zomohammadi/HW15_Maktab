@@ -22,7 +22,8 @@ public class CourseRepositoryImpl extends BaseEntityRepositoryImpl<Course> imple
 
     public List<Course> getCourseInCurrentTerm() {
         /*
-select c from course c join term t on c.term_id=t.id where t.id= (select max(s.id) from term s) and c.capacity>0 //t.is_active =
+            select c from course c join term t on c.term_id=t.id where t.id= (select max(s.id) from term s)
+               and c.capacity>0 //t.is_active =
          */
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 

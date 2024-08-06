@@ -29,8 +29,24 @@ public class LoginMenu {
                         1. Login
                         2. Exit
                     """);
+            System.out.print("Option: ");
             int option = input.nextInt();
             input.nextLine();
+           /* System.out.print("Option: ");
+            String stringOption = input.nextLine();
+            if (stringOption == null || stringOption.isEmpty()) {
+                System.out.println("Input can not be null or empty");
+                return;
+            }
+            char[] chars = stringOption.toCharArray();
+            for (char c : chars) {
+                if (!Character.isDigit(c)) {
+                    System.out.println("input must contain only number between (0-9)");
+                    return;
+                }
+            }
+            // input.nextLine();
+            int option = Integer.parseInt(stringOption);*/
             switch (option) {
                 case 1 -> continueRunning = !login(input);
                 case 2 -> {

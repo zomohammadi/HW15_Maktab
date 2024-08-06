@@ -34,7 +34,8 @@ public class Student extends User {
     @Override
     public String toString() {
         return "Student{" +
-               " FirstName= " + super.getFirstName()
+               " Username = "+super.getUsername()
+               +" ,FirstName= " + super.getFirstName()
                + ", LastName= " + super.getLastName()
                + ", MobileNumber= " + super.getMobileNumber()
                + ", NationalCode= " + super.getNationalCode()

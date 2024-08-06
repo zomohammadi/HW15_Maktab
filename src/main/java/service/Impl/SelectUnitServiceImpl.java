@@ -39,10 +39,11 @@ public class SelectUnitServiceImpl implements SelectUnitService {
         return sumScore / sumUnit;
     }
 
-    public int getMaxSelectUnit(Long studentID, Long termId) {
+    @Override
+    public Integer getMaxSelectUnit(Long studentID, Long termId) {
         Double avg = null;
 
-        int maxSelectUnit = 0;
+        Integer maxSelectUnit = null;
         if (termId > 1) {
             avg = getAvg(studentID, termId - 1);
         }
@@ -56,25 +57,25 @@ public class SelectUnitServiceImpl implements SelectUnitService {
 
     @Override
     public void saveUnitSelection(Student student, Course course) {
-        int maxSelectUnit = getMaxSelectUnit(student.getId(), course.getTerm().getId());
+       /* Integer maxSelectUnit = getMaxSelectUnit(student.getId(), course.getTerm().getId());
         if (isPassLessonInPreviousTerms(student.getId(), course)) {
             System.out.println("can not select  the course! because you pass it in previous terms");
-            return;
+            return null;
         } else {
             Map<Map<String, Integer>, Double> courseInCurrentTerm = getLessonWithScore(student.getId(), course.getTerm().getId());
 
-            if (isLessenSelectedInCurrentSelectUnit(course, courseInCurrentTerm)) return;
-        }
+            if (isLessenSelectedInCurrentSelectUnit(course, courseInCurrentTerm)) return null;
+        }*/
 
         selectUnitRepository.saveUnitSelection(student, course);
         course.setCapacity(course.getCapacity() - 1);
         ApplicationContext.getInstance().getCourseService().update(course);
 
-
-        //return maxSelectUnit - course.getLesson().getUnit();
+/*
+        return maxSelectUnit - course.getLesson().getUnit();*/
     }
 
-    private static boolean isLessenSelectedInCurrentSelectUnit(Course course, Map<Map<String, Integer>, Double> courseInCurrentTerm) {
+    public boolean isLessenSelectedInCurrentSelectUnit(Course course, Map<Map<String, Integer>, Double> courseInCurrentTerm) {
         for (Map.Entry<Map<String, Integer>, Double> entry : courseInCurrentTerm.entrySet()) {
             for (Map.Entry<String, Integer> integerMap : entry.getKey().entrySet()) {
                 String title = integerMap.getKey();

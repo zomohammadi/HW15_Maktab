@@ -55,14 +55,14 @@ public class ApplicationContext {
         lessonService = new LessonServiceImpl(lessonRepository);
 
         selectUnitService = new SelectUnitServiceImpl(selectUnitRepository);
-        courseService = new CourseServiceImpl(courseRepository,baseEntityRepositoryCourse );
+        courseService = new CourseServiceImpl(courseRepository, baseEntityRepositoryCourse);
 
         //menu
-        this.employeeMenu = new EmployeeMenu(this.employeeService,teacherService,studentService);
-        this.teacherMenu=new TeacherMenu();
-        this.studentMenu=new StudentMenu();
-        this.itemsMenu=new ItemsMenu(employeeMenu,teacherMenu,studentMenu);
-        this.loginMenu = new LoginMenu(this.employeeService,teacherService,studentService);
+        this.employeeMenu = new EmployeeMenu(this.employeeService, teacherService, studentService);
+        this.teacherMenu = new TeacherMenu();
+        this.studentMenu = new StudentMenu(this.studentService, this.selectUnitService, this.courseService);
+        this.itemsMenu = new ItemsMenu(employeeMenu, teacherMenu, studentMenu);
+        this.loginMenu = new LoginMenu(this.employeeService, teacherService, studentService);
         this.mainMenu = new MainMenu(this.loginMenu, this.itemsMenu);
     }
 

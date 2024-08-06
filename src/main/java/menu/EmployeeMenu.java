@@ -1,6 +1,7 @@
 package menu;
 
 import entity.Employee;
+import entity.Teacher;
 import entity.User;
 import enumration.TeacherType;
 import service.EmployeeService;
@@ -37,11 +38,28 @@ public class EmployeeMenu {
                         8. Update Teacher
                         9. Find ALl Teacher
                         10. Add Student
-                        11. Delete Employee
-                        12. Update Employee
-                        13. Find ALl Employee
+                        11. Delete Student
+                        12. Update Student
+                        13. Find ALl Student
                         14. Exit
                     """);
+            System.out.print("Option: ");
+            /*String stringOption = input.nextLine();
+            if (stringOption == null || stringOption.isEmpty()) {
+                System.out.println("Input can not be null or empty");
+                return;
+            }
+            char[] chars = stringOption.toCharArray();
+            for (char c : chars) {
+                if (!Character.isDigit(c)) {
+                    System.out.println("input must contain only number between (0-9)");
+                    return;
+                }
+            }
+           // input.nextLine();
+            int option = Integer.parseInt(stringOption);
+          //  input.nextLine();*/
+
             int option = input.nextInt();
             input.nextLine();
             switch (option) {
@@ -108,10 +126,14 @@ public class EmployeeMenu {
         } else {
             System.out.print("Enter the Salary: ");
             baseSalary = input.nextLine();
-            if (!fillInputSalary(baseSalary, 10000000.0, 50000000.0)) {
+            if (!fillInputSalary(baseSalary, 20000000.0, 60000000.0)) {
                 return;
             }
         }
+        Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).nationalCode(nationalCode)
+                .mobileNumber(mobileNumber).username(username).password(password)
+                .teacherCode(teacherCode).teacherType(TeacherType.valueOf(teacherType))
+                .baseSalary(Double.valueOf(baseSalary)).build();
 
     }
 
