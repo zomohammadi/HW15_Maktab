@@ -104,56 +104,31 @@ public class StudentMenu {
                     return;
             }
             ApplicationContext.getInstance().getSelectUnitService().saveUnitSelection((Student) token, course);
-            countOfSelectedUnit += course.getLesson().getUnit();
-            Term term = new Term();
-            term.setId(termId);
-            CountUnit countUnit = new CountUnit((Student) token, term, countOfSelectedUnit);
-            ApplicationContext.getInstance().getCountUnitService().save(countUnit);
-        }
-    }
-
-    private void selectUnit(User token, Scanner input, List<Course> courseInCurrentTerm) {
-        System.out.print("Enter the Course Id: ");
-
-        Long termId = courseInCurrentTerm.get(0).getTerm().getId();
-        Long courseId = checkNumber(input);
-        if (courseId != null) {
-            Course course = null;
-            for (Course c : courseInCurrentTerm) {
-                if (c.getId().equals(courseId)) {
-                    course = c;
-                    break;
-                }
-            }
-            if (course == null) {
-                System.out.println("plz the course id in this list ");
-                return;
-            }
-
-            Integer maxSelectUnit = ApplicationContext.getInstance().getSelectUnitService()
-                    .getMaxSelectUnit(token.getId(), termId);
-
-            if (maxSelectUnit - course.getLesson().getUnit() >= 0) {
-                if (ApplicationContext.getInstance().getSelectUnitService()
-                        .isPassLessonInPreviousTerms(token.getId(), course)) {
-                    System.out.println("can not select  the course! because you pass it in previous terms");
-                    return;
-                } else {
-                    Map<Map<String, Integer>, Double> courseIsSelectInCurrentTerm = ApplicationContext.getInstance().getSelectUnitService()
-                            .getLessonWithScore(token.getId(), termId);
-
-                    if (ApplicationContext.getInstance().getSelectUnitService()
-                            .isLessenSelectedInCurrentSelectUnit(course, courseIsSelectInCurrentTerm))
-                        return;
-                }
-                ApplicationContext.getInstance().getSelectUnitService().saveUnitSelection((Student) token, course);
-                maxSelectUnit -= course.getLesson().getUnit();
-            } else {
-                System.out.println("the capacity is more than the allowed limit. your capacity is: " + maxSelectUnit);
+            if (countOfSelectedUnit ==0){
+                countOfSelectedUnit += course.getLesson().getUnit();
+                Term term = new Term();
+                term.setId(termId);
+                CountUnit countUnit = new CountUnit((Student) token, term, countOfSelectedUnit);
+                ApplicationContext.getInstance().getCountUnitService().save(countUnit);
+                System.out.println("Select Unit Done! ");
+            }else {
+                CountUnit countUnit = ApplicationContext.getInstance().getCountUnitService().findCountUnit(studentId, termId);
+                countOfSelectedUnit += course.getLesson().getUnit();
+                countUnit.setCountOfSelectedUnit(countOfSelectedUnit);
+                ApplicationContext.getInstance().getCountUnitService().update(countUnit);
+                System.out.println("Select Unit Done! ");
             }
 
         }
     }
+/*
+    private static CountUnit initializeCountUnit(Integer countOfSelectedUnit, Course course, Long termId, Student token) {
+        countOfSelectedUnit += course.getLesson().getUnit();
+        Term term = new Term();
+        term.setId(termId);
+        CountUnit countUnit = new CountUnit(token, term, countOfSelectedUnit);
+        return countUnit;
+    }*/
 
     private void showLessonsWithScoreInEachTerm(User token, Scanner input) {
         System.out.print("Enter the term Id: ");

@@ -16,7 +16,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void save(Student employee) {
-        studentRepository.save(employee);
+       /* try {*/
+            studentRepository.save(employee);
+       /* } catch (Exception e) {
+            System.out.println("not Save" + e.getMessage());
+        }*/
     }
 
     @Override

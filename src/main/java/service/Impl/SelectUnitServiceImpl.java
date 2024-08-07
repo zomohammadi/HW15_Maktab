@@ -47,10 +47,12 @@ public class SelectUnitServiceImpl implements SelectUnitService {
         Integer maxSelectUnit = null;
         if (termId > 1) {
             avg = getAvg(studentID, termId - 1);
+        }else {
+            avg=0.0;
         }
         if (avg >= 18.0) {
             maxSelectUnit = 24;
-        } else if (avg < 18 || avg == null) {
+        } else if (avg < 18) {
             maxSelectUnit = 20;
         }
         return maxSelectUnit;

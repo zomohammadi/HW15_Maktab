@@ -35,4 +35,22 @@ public class CountUnitRepositoryImpl extends BaseEntityRepositoryImpl<CountUnit>
         );
         return getEntityManager().createQuery(query).getSingleResult();
     }
+
+    @Override
+    public CountUnit findCountUnit(Long studentId, Long termId) {
+        /*
+          select CountUnit from CountUnit c where c.student_d = 1 and c.term_id = 1;
+         */
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<CountUnit> query = criteriaBuilder.createQuery(CountUnit.class);
+
+        Root<CountUnit> countUnitRoot = query.from(CountUnit.class);
+
+        //where clause
+        query.where(
+                criteriaBuilder.equal(countUnitRoot.get("student").get("id"), studentId),
+                criteriaBuilder.equal(countUnitRoot.get("term").get("id"), termId)
+        );
+        return getEntityManager().createQuery(query).getSingleResult();
+    }
 }

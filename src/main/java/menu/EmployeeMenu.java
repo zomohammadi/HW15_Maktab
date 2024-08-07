@@ -1,6 +1,7 @@
 package menu;
 
 import entity.Employee;
+import entity.Student;
 import entity.Teacher;
 import entity.User;
 import enumration.TeacherType;
@@ -9,6 +10,7 @@ import service.StudentService;
 import service.TeacherService;
 import util.ApplicationContext;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class EmployeeMenu {
@@ -69,10 +71,65 @@ public class EmployeeMenu {
                 case 4 -> findAllEmployee();
                 case 5 -> showPaySlipEmployee(token);
                 case 6 -> addTeacher(input);
-                case 11 -> condition = false;
+                case 10 -> addStudent(input);
+                case 14 -> condition = false;
                 default -> System.out.println("Wrong option!");
             }
         }
+    }
+
+    private void addStudent(Scanner input) {
+        System.out.print("Enter the FirstName: ");
+        String firstName = input.nextLine();
+        if (!fillInputString(firstName)) {
+            return;
+        }
+
+        System.out.print("Enter the LastName: ");
+        String lastName = input.nextLine();
+        if (!fillInputString(lastName)) {
+            return;
+        }
+
+        System.out.print("Enter the National Code (10 digit): ");
+        String nationalCode = input.nextLine();
+        if (!fillInputNumbers(nationalCode, 10)) {
+            return;
+        }
+
+        System.out.print("Enter the MobileNumber (11 digit): ");
+        String mobileNumber = input.nextLine();
+        if (!fillInputNumbers(mobileNumber, 11)) {
+            return;
+        }
+
+        System.out.print("Enter the Username: ");
+        String username = input.nextLine();
+        if (checkedNullInput(username)) {
+            return;
+        }
+        System.out.print("Enter the Password: ");
+        String password = input.nextLine();
+        if (checkedNullInput(password)) {
+            return;
+        }
+        System.out.print("Enter the Student Code (5 digit): ");
+        String studentCode = input.nextLine();
+        if (!fillInputNumbers(studentCode, 5)) {
+            return;
+        }
+        System.out.print("Enter the Entry Year (4 digit): ");
+        String enteringYear = input.nextLine();
+        if (!fillInputNumbers(enteringYear, 4)) {
+            return;
+        }
+        Student student = Student.builder().firstName(firstName).lastName(lastName).nationalCode(nationalCode)
+                .mobileNumber(mobileNumber).username(username).password(password)
+                .studentCode(studentCode).enteringYear(Integer.valueOf(enteringYear)).build();
+
+
+        ApplicationContext.getInstance().getStudentService().save(student);
+        System.out.println("Done!");
     }
 
     private void addTeacher(Scanner input) {
@@ -115,16 +172,21 @@ public class EmployeeMenu {
         if (!fillInputNumbers(teacherCode, 5)) {
             return;
         }
+        System.out.print("Enter the teacherType (contractual->Enter 0 digit or faculty_member->Enter 1 digit): ");
         String teacherType = input.nextLine();
-        if (!teacherType.equals(TeacherType.CONTRACTUAL.name().toLowerCase()) || !teacherType.equals(TeacherType.FACULTY_MEMBER.name().toLowerCase())) {
-            System.out.println("Enter the correct TeacherType(TeacherType or FACULTY_MEMBER) ");
+        if (Objects.equals(teacherType, "0")) {
+            teacherType = "CONTRACTUAL";
+        } else if (Objects.equals(teacherType, "1")) {
+            teacherType = "FACULTY_MEMBER";
+        } else {
+            System.out.println("Enter the correct TeacherType(CONTRACTUAL or FACULTY_MEMBER) ");
             return;
         }
         String baseSalary = "";
-        if (teacherType.equals(TeacherType.CONTRACTUAL.name().toLowerCase())) {
+        if (teacherType.equals("CONTRACTUAL")) {
             baseSalary = "0";
         } else {
-            System.out.print("Enter the Salary: ");
+            System.out.print("Enter the Salary(min: 20000000.0, max: 60000000.0 =>  ");
             baseSalary = input.nextLine();
             if (!fillInputSalary(baseSalary, 20000000.0, 60000000.0)) {
                 return;
@@ -135,6 +197,8 @@ public class EmployeeMenu {
                 .teacherCode(teacherCode).teacherType(TeacherType.valueOf(teacherType))
                 .baseSalary(Double.valueOf(baseSalary)).build();
 
+        ApplicationContext.getInstance().getTeacherService().save(teacher);
+        System.out.println("Don!");
     }
 
     private void showPaySlipEmployee(User token) {
@@ -284,7 +348,7 @@ public class EmployeeMenu {
             return;
         }
 
-        System.out.print("Enter the Salary: ");
+        System.out.print("Enter the Salary (min => 10000000.0, mx=> 50000000.0 ): ");
         String salary = input.nextLine();
         if (!fillInputSalary(salary, 10000000.0, 50000000.0)) {
             return;

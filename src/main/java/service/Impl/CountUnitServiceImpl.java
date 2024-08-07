@@ -34,4 +34,11 @@ public class CountUnitServiceImpl implements CountUnitService {
             return null;
         }
     }
+
+    @Override
+    public CountUnit findCountUnit(Long studentId, Long termId) {
+        return countUnitRepository2.findCountUnit(studentId,termId);
+    }
+
+
 }
