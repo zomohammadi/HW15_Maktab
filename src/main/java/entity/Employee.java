@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.text.NumberFormat;
+
 @Entity
-@Table(name = Employee.TABLE_NAME ,uniqueConstraints = {
+@Table(name = Employee.TABLE_NAME, uniqueConstraints = {
         @UniqueConstraint(name = "Unique_Constraint_" + Employee.TABLE_NAME, columnNames = {User.USERNAME, User.PASSWORD})
 })
 @Setter
@@ -36,12 +38,12 @@ public class Employee extends User {
     public String toString() {
         return "Employee{" +
                " UserName= " + super.getUsername()
-                +" ,FirstName= " + super.getFirstName()
-                + ", LastName= " + super.getLastName()
-                + ", MobileNumber= " + super.getMobileNumber()
-                + ", NationalCode= " + super.getNationalCode()
-                + ", PersonnelCode='" + PersonnelCode
-                + ", salary=" + salary +
-                "}";
+               + " ,FirstName= " + super.getFirstName()
+               + ", LastName= " + super.getLastName()
+               + ", MobileNumber= " + super.getMobileNumber()
+               + ", NationalCode= " + super.getNationalCode()
+               + ", PersonnelCode='" + PersonnelCode
+               + ", salary=" + NumberFormat.getInstance().format(salary) +
+               "}";
     }
 }

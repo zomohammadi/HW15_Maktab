@@ -6,6 +6,7 @@ import enumration.TeacherType;
 import service.SelectUnitService;
 import service.TeacherService;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +23,6 @@ public class TeacherMenu {
     public void showTeacherMenu(User token) {
         Scanner input = new Scanner(System.in);
         boolean condition = true;
-        TeacherLable:
         while (condition) {
             System.out.println("""
                         Teacher Operation Menu:
@@ -43,19 +43,11 @@ public class TeacherMenu {
                 Integer option = Integer.parseInt(stringOption);
 
 
-                sw:
                 switch (option) {
                     case 1 -> showInformation(token);
-                    case 2 -> {
-                        List<Object[]> queryResult = teacherService.getQueryResult(token.getId());
-                        Long[][] array = new Long[queryResult.size()][3];
+                   /* case 2 -> {
 
-                        for (Object[] arrObj : queryResult) {
-                            for (int i = 0; i < array.length; i++) {
-                                //TODO
-                            }
-                        }
-                    }
+                    }*/
                     case 3 -> showPaySlip(token, input);
                     case 4 -> condition = false;
                     default -> System.out.println("Wrong option!");
@@ -69,21 +61,27 @@ public class TeacherMenu {
     }
 
     private void showPaySlip(User token, Scanner input) {
-        showInformation(token);
+
         System.out.print("Enter the TermId: ");
         Long termId = checkNumber(input);
         if (termId != null) {
-            Long sumUnitsForTermAndTeacher = teacherService.getSumUnitsForTermAndTeacher(termId, token.getId());
-            if (sumUnitsForTermAndTeacher != null) {
+            List<Long> courseIdList = teacherService.getCourseTaughtByTeacher(token.getId(), termId);
+            if (courseIdList == null || courseIdList.size() == 0) {
+                System.out.println("you are not Taught any Course ");
+            } else {
+                List<Integer> unitsThatTaughtByTeacher = teacherService.getUnitsThatTaughtByTeacher(courseIdList);
+                Integer sumUnits = teacherService.getSumUnits(unitsThatTaughtByTeacher);
                 Double salary = null;
                 if (((Teacher) token).getTeacherType().equals(TeacherType.CONTRACTUAL)) {
-                    salary = sumUnitsForTermAndTeacher * 1000000.0;
+                    salary = sumUnits * 1000000.0;
                 } else {
-                    salary = ((Teacher) token).getBaseSalary() + (sumUnitsForTermAndTeacher * 1000000.0);
+                    salary = ((Teacher) token).getBaseSalary() + (sumUnits * 1000000.0);
                 }
-                System.out.println("Salary is : " + salary);
-            } else System.out.println("You have not taught a course this term! ");
-        }
+                showInformation(token);
+                System.out.println("Count of Units that Teacher though: " + sumUnits);
+                System.out.println("Salary is : " + NumberFormat.getInstance().format(salary));
+            }
+        } /*else System.out.println("You have not taught a course this term! ");*/
     }
 
     private void showInformation(User token) {

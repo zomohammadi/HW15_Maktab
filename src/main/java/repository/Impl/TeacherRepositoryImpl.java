@@ -1,9 +1,9 @@
 
 package repository.Impl;
 
-import entity.*;
+import entity.Teacher;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.TypedQuery;
 import repository.TeacherRepository;
 
 import java.util.List;
@@ -18,72 +18,18 @@ public class TeacherRepositoryImpl extends BaseEntityRepositoryImpl<Teacher> imp
         return Teacher.class;
     }
 
-    @Override
-    public List<Object[]> getQueryResult(Long teacherId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+    public List<Long> getCourseTaughtByTeacher(Long teacherId, Long termId) {
 
-        // Root entities
-        Root<SelectUnit> selectUnit = cq.from(SelectUnit.class);
-        Join<SelectUnit,Course > course = selectUnit.join("course");
-        Join<Course, Teacher> teacher = course.join("teacher");
-        Join<Course, Term> term = course.join("term");
-        Join<SelectUnit, Student> student = selectUnit.join("student");
+        TypedQuery<Long> query = getEntityManager().createQuery("""
+                select distinct u.course.id from SelectUnit u, Course c where u.course.id=c.id
+                and c.term.id = ?1 and c.teacher.id = ?2
+                """, Long.class);
+        query.setParameter(1, termId);
+        query.setParameter(2, teacherId);
 
-        // Subquery for the maximum term ID
-        Subquery<Long> subquery = cq.subquery(Long.class);
-        Root<Term> subTerm = subquery.from(Term.class);
-        subquery.select(cb.max(subTerm.get("id")));
-
-        // Predicates
-        Predicate teacherPredicate = cb.equal(teacher.get("id"), teacherId);
-        Predicate termPredicate = cb.equal(term.get("id"), subquery);
-
-        // Select clause
-        cq.multiselect(student.get("id"), course.get("id"), selectUnit.get("id"))
-                .where(cb.and(teacherPredicate, termPredicate));
-
-        // Execute query
-        return getEntityManager().createQuery(cq).getResultList();
+        return query.getResultList();
     }
-    @Override
-    public Long getSumUnitsForTermAndTeacher(Long termId, Long teacherId) {
-/*
 
-        select sum(tbl.unit)
-from course g,
-     (select distinct c.id c_id, l.unit, t.id t_id
-      from selectunit u
-               join course c on c.id = u.course_id
-               join lesson l on c.lesson_id = l.id
-               join teacher t on c.teacher_id = t.id
-      where c.term_id = 1
-        and t.id = 1) tbl
-where tbl.c_id = g.id
-         */
-
-        String subquery = "SELECT DISTINCT c.id, l.unit, t.id " +
-                          "FROM SelectUnit u " +
-                          "JOIN u.course c " +
-                          "JOIN c.lesson l " +
-                          "JOIN c.teacher t " +
-                          "WHERE c.term.id = :termId " +
-                          "AND t.id = :teacherId";
-
-        List<Object[]> results = getEntityManager().createQuery(subquery)
-                .setParameter("termId", 1)
-                .setParameter("teacherId", 1)
-                .getResultList();
-
-// Step 2: Sum the units
-        Long totalUnits = 0L;
-        for (Object[] result : results) {
-            Long unit = (Long) result[1];
-            totalUnits += unit;
-        }
-
-        return totalUnits;
-    }
 }
 
  /* CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
