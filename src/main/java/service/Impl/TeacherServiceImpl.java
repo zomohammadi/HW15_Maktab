@@ -3,42 +3,67 @@ package service.Impl;
 import entity.Teacher;
 import jakarta.persistence.NoResultException;
 import repository.BaseEntityRepository;
+import repository.TeacherRepository;
 import service.TeacherService;
 
 import java.util.List;
 
 public class TeacherServiceImpl implements TeacherService {
 
-    private BaseEntityRepository<Teacher> teacherRepository;
+    private final BaseEntityRepository<Teacher> teacherRepository;
+    private final TeacherRepository teacherRepository2;
 
-    public TeacherServiceImpl(BaseEntityRepository<Teacher> teacherRepository) {
+    public TeacherServiceImpl(BaseEntityRepository<Teacher> teacherRepository, TeacherRepository teacherRepository2) {
         this.teacherRepository = teacherRepository;
+        this.teacherRepository2 = teacherRepository2;
     }
-
 
     @Override
     public void save(Teacher teacher) {
-        teacherRepository.save(teacher);
+        try {
+            teacherRepository.save(teacher);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void update(Teacher teacher) {
-        teacherRepository.update(teacher);
+        try {
+            teacherRepository.update(teacher);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
-    public void delete(Teacher teacher) {
-        teacherRepository.delete(teacher);
+    public void delete(Long id) {
+        try {
+            Teacher teacher = findById(id);
+            teacherRepository.delete(teacher);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public Teacher findById(Long id) {
-        return teacherRepository.findById(id);
+        try {
+            return teacherRepository.findById(id);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public List<Teacher> findAll() {
-        return teacherRepository.findAll();
+        try {
+            return teacherRepository.findAll();
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -47,8 +72,23 @@ public class TeacherServiceImpl implements TeacherService {
 
             return teacherRepository.findByUserNameAndPassword(userName, password);
         } catch (NoResultException e) {
-            System.out.println("No result found");
+            System.out.println("No result found" + e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public Long getSumUnitsForTermAndTeacher(Long termId, Long teacherId) {
+        try {
+            return teacherRepository2.getSumUnitsForTermAndTeacher(termId, teacherId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Object[]> getQueryResult(Long teacherId) {
+        return teacherRepository2.getQueryResult(teacherId);
     }
 }

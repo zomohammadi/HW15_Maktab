@@ -5,11 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import menu.*;
-import repository.BaseEntityRepository;
-import repository.CountUnitRepository;
-import repository.CourseRepository;
+import repository.*;
 import repository.Impl.*;
-import repository.SelectUnitRepository;
 import service.*;
 import service.Impl.*;
 
@@ -50,12 +47,13 @@ public class ApplicationContext {
         SelectUnitRepository selectUnitRepository = new SelectUnitRepositoryImpl(em);
         CourseRepository courseRepository = new CourseRepositoryImpl(em);
         CountUnitRepository countUnitRepository = new CountUnitRepositoryImpl(em);
+        TeacherRepository teacherRepository1 = new TeacherRepositoryImpl(em);
 
         BaseEntityRepository<Course> baseEntityRepositoryCourse = new CourseRepositoryImpl(em);
         BaseEntityRepository<CountUnit> baseEntityRepositoryCountUnit = new CountUnitRepositoryImpl(em);
 
         employeeService = new EmployeeServiceImpl(employeeRepository);
-        teacherService = new TeacherServiceImpl(teacherRepository);
+        teacherService = new TeacherServiceImpl(teacherRepository, teacherRepository1);
         studentService = new StudentServiceImpl(studentRepository);
         lessonService = new LessonServiceImpl(lessonRepository);
 
@@ -65,8 +63,8 @@ public class ApplicationContext {
 
         //menu
         this.employeeMenu = new EmployeeMenu(this.employeeService, teacherService, studentService);
-        this.teacherMenu = new TeacherMenu();
-        this.studentMenu = new StudentMenu(this.studentService, this.selectUnitService, this.courseService);
+        this.teacherMenu = new TeacherMenu(teacherService, selectUnitService);
+        this.studentMenu = new StudentMenu(this.selectUnitService, this.courseService);
         this.itemsMenu = new ItemsMenu(employeeMenu, teacherMenu, studentMenu);
         this.loginMenu = new LoginMenu(this.employeeService, teacherService, studentService);
         this.mainMenu = new MainMenu(this.loginMenu, this.itemsMenu);

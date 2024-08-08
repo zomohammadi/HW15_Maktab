@@ -5,6 +5,7 @@ import entity.Student;
 import entity.Teacher;
 import entity.User;
 import enumration.TeacherType;
+import exception.StudentExceptions;
 import service.EmployeeService;
 import service.StudentService;
 import service.TeacherService;
@@ -46,36 +47,221 @@ public class EmployeeMenu {
                         14. Exit
                     """);
             System.out.print("Option: ");
-            /*String stringOption = input.nextLine();
+            String stringOption = input.nextLine();
             if (stringOption == null || stringOption.isEmpty()) {
                 System.out.println("Input can not be null or empty");
-                return;
+                showEmployeeMenu(token);
+                break;
             }
-            char[] chars = stringOption.toCharArray();
-            for (char c : chars) {
-                if (!Character.isDigit(c)) {
-                    System.out.println("input must contain only number between (0-9)");
-                    return;
+            try {
+                Integer option = Integer.parseInt(stringOption);
+                switch (option) {
+                    case 1 -> addEmployee(input);
+                    case 2 -> deleteEmployee(input);
+                    case 3 -> updateEmployee(input);
+                    case 4 -> findAllEmployee();
+                    case 5 -> showPaySlipEmployee(token);
+                    case 6 -> addTeacher(input);
+                    case 7 -> deleteTeacher(input);
+                    case 8 -> updateTeacher(input);
+                    case 9 -> findAllTeacher();
+                    case 10 -> addStudent(input);
+                    case 11 -> deleteStudent(input);
+                    case 12 -> updateStudent(input);
+                    case 13 -> findAllStudent();
+                    case 14 -> condition = false;
+                    default -> System.out.println("Wrong option!");
+                }
+
+            } catch (Exception e) {
+                if (e instanceof NumberFormatException) {
+                    System.out.println("Wrong option!");
                 }
             }
-           // input.nextLine();
-            int option = Integer.parseInt(stringOption);
-          //  input.nextLine();*/
+        }
+    }
 
-            int option = input.nextInt();
-            input.nextLine();
-            switch (option) {
-                case 1 -> addEmployee(input);
-                case 2 -> deleteEmployee(input);
-                case 3 -> updateEmployee(input);
-                case 4 -> findAllEmployee();
-                case 5 -> showPaySlipEmployee(token);
-                case 6 -> addTeacher(input);
-                case 10 -> addStudent(input);
-                case 14 -> condition = false;
-                default -> System.out.println("Wrong option!");
+    private void deleteStudent(Scanner input) {
+        System.out.print("Enter the Username: ");
+        String username = input.nextLine();
+        if (checkedNullInput(username)) {
+            return;
+        }
+        System.out.print("Enter the Password: ");
+        String password = input.nextLine();
+        if (checkedNullInput(password)) {
+            return;
+        }
+        Student student = studentService.findByUserNameAndPassword(username, password);
+        if (student != null) {
+            studentService.delete(student.getId());
+            System.out.println("Done! ");
+        } else System.out.println("the student with username and password not found!");
+    }
+
+    private void updateStudent(Scanner input) {
+        System.out.print("Enter the Username: ");
+        String username = input.nextLine();
+        if (checkedNullInput(username)) {
+            return;
+        }
+        System.out.print("Enter the Password: ");
+        String password = input.nextLine();
+        if (checkedNullInput(password)) {
+            return;
+        }
+        Student student = studentService.findByUserNameAndPassword(username, password);
+        if (student == null) {
+            System.out.println("not student find! ");
+            return;
+        }
+
+        //---------------
+        System.out.print("Enter the FirstName: ");
+        String firstName = input.nextLine();
+        if (!firstName.isEmpty()) {
+            if (!fillInputString_v2(firstName)) {
+                return;
+            } else {
+                student.setFirstName(firstName);
             }
         }
+        System.out.print("Enter the LastName: ");
+        String lastName = input.nextLine();
+        if (!lastName.isEmpty()) {
+            if (!fillInputString_v2(lastName)) {
+                return;
+            } else {
+                student.setLastName(lastName);
+            }
+        }
+
+        System.out.print("Enter the National Code (10 digit): ");
+        String nationalCode = input.nextLine();
+        if (!nationalCode.isEmpty()) {
+            if (!fillInputNumbers_v2(nationalCode, 10)) {
+                return;
+            } else {
+                student.setNationalCode(nationalCode);
+            }
+        }
+        System.out.print("Enter the MobileNumber (11 digit): ");
+        String mobileNumber = input.nextLine();
+        if (!mobileNumber.isEmpty()) {
+            if (!fillInputNumbers_v2(mobileNumber, 11)) {
+                return;
+            } else {
+                student.setMobileNumber(mobileNumber);
+            }
+        }
+        System.out.print("Enter the student Code (5 digit): ");
+        String studentCode = input.nextLine();
+        if (!studentCode.isEmpty()) {
+            if (!fillInputNumbers_v2(studentCode, 5)) {
+                return;
+            } else {
+                student.setStudentCode(studentCode);
+            }
+        }
+
+        studentService.update(student);
+        System.out.println("Updated!");
+    }
+
+    private void findAllStudent() {
+        studentService.findAll().forEach(System.out::println);
+    }
+
+    private void findAllTeacher() {
+        teacherService.findAll().forEach(System.out::println);
+    }
+
+    private void updateTeacher(Scanner input) {
+        System.out.print("Enter the Username: ");
+        String username = input.nextLine();
+        if (checkedNullInput(username)) {
+            return;
+        }
+        System.out.print("Enter the Password: ");
+        String password = input.nextLine();
+        if (checkedNullInput(password)) {
+            return;
+        }
+        Teacher teacher = teacherService.findByUserNameAndPassword(username, password);
+        if (teacher == null) {
+            System.out.println("not teacher find! ");
+            return;
+        }
+
+        //---------------
+        System.out.print("Enter the FirstName: ");
+        String firstName = input.nextLine();
+        if (!firstName.isEmpty()) {
+            if (!fillInputString_v2(firstName)) {
+                return;
+            } else {
+                teacher.setFirstName(firstName);
+            }
+        }
+        System.out.print("Enter the LastName: ");
+        String lastName = input.nextLine();
+        if (!lastName.isEmpty()) {
+            if (!fillInputString_v2(lastName)) {
+                return;
+            } else {
+                teacher.setLastName(lastName);
+            }
+        }
+
+        System.out.print("Enter the National Code (10 digit): ");
+        String nationalCode = input.nextLine();
+        if (!nationalCode.isEmpty()) {
+            if (!fillInputNumbers_v2(nationalCode, 10)) {
+                return;
+            } else {
+                teacher.setNationalCode(nationalCode);
+            }
+        }
+        System.out.print("Enter the MobileNumber (11 digit): ");
+        String mobileNumber = input.nextLine();
+        if (!mobileNumber.isEmpty()) {
+            if (!fillInputNumbers_v2(mobileNumber, 11)) {
+                return;
+            } else {
+                teacher.setMobileNumber(mobileNumber);
+            }
+        }
+        System.out.print("Enter the Teacher Code (5 digit): ");
+        String teacherCode = input.nextLine();
+        if (!teacherCode.isEmpty()) {
+            if (!fillInputNumbers_v2(teacherCode, 5)) {
+                return;
+            } else {
+                teacher.setTeacherCode(teacherCode);
+            }
+        }
+
+        teacherService.update(teacher);
+        System.out.println("Updated!");
+    }
+
+    private void deleteTeacher(Scanner input) {
+        System.out.print("Enter the Username: ");
+        String username = input.nextLine();
+        if (checkedNullInput(username)) {
+            return;
+        }
+        System.out.print("Enter the Password: ");
+        String password = input.nextLine();
+        if (checkedNullInput(password)) {
+            return;
+        }
+        Teacher teacher = teacherService.findByUserNameAndPassword(username, password);
+        if (teacher != null) {
+            teacherService.delete(teacher.getId());
+            System.out.println("Done! ");
+        } else System.out.println("the teacher with username and password not found!");
+
     }
 
     private void addStudent(Scanner input) {
@@ -128,7 +314,13 @@ public class EmployeeMenu {
                 .studentCode(studentCode).enteringYear(Integer.valueOf(enteringYear)).build();
 
 
-        ApplicationContext.getInstance().getStudentService().save(student);
+        try {
+            ApplicationContext.getInstance().getStudentService().save(student);
+        } catch (Exception e) {
+            if (e instanceof StudentExceptions.StudentInsertSqlException) {
+                System.out.println(" student not save please do again");
+            }
+        }
         System.out.println("Done!");
     }
 
@@ -197,7 +389,7 @@ public class EmployeeMenu {
                 .teacherCode(teacherCode).teacherType(TeacherType.valueOf(teacherType))
                 .baseSalary(Double.valueOf(baseSalary)).build();
 
-        ApplicationContext.getInstance().getTeacherService().save(teacher);
+        teacherService.save(teacher);
         System.out.println("Don!");
     }
 
@@ -206,7 +398,7 @@ public class EmployeeMenu {
     }
 
     private void findAllEmployee() {
-        ApplicationContext.getInstance().getEmployeeService().findAll().forEach(System.out::println);
+        employeeService.findAll().forEach(System.out::println);
     }
 
     private void updateEmployee(Scanner input) {
@@ -220,7 +412,7 @@ public class EmployeeMenu {
         if (checkedNullInput(password)) {
             return;
         }
-        Employee employee = ApplicationContext.getInstance().getEmployeeService().findByUserNameAndPassword(username, password);
+        Employee employee = employeeService.findByUserNameAndPassword(username, password);
         if (employee == null) {
             System.out.println("not employee find! ");
             return;
@@ -283,7 +475,7 @@ public class EmployeeMenu {
                 employee.setSalary(Double.valueOf(salary));
             }
         }
-        ApplicationContext.getInstance().getEmployeeService().update(employee);
+        employeeService.update(employee);
         System.out.println("Updated!");
     }
 
@@ -298,9 +490,9 @@ public class EmployeeMenu {
         if (checkedNullInput(password)) {
             return;
         }
-        Employee employee = ApplicationContext.getInstance().getEmployeeService().findByUserNameAndPassword(username, password);
+        Employee employee = employeeService.findByUserNameAndPassword(username, password);
         if (employee != null) {
-            ApplicationContext.getInstance().getEmployeeService().delete(employee.getId());
+            employeeService.delete(employee.getId());
             System.out.println("Done! ");
         } else System.out.println("the employee with username and password not found!");
 
@@ -360,7 +552,7 @@ public class EmployeeMenu {
                 .PersonnelCode(personalCode).salary(Double.valueOf(salary)).build();
 
 
-        ApplicationContext.getInstance().getEmployeeService().save(employee);
+        employeeService.save(employee);
         System.out.println("Don!");
     }
 
@@ -418,10 +610,16 @@ public class EmployeeMenu {
 
     private boolean fillInputString_v2(String input) {
         char[] chars = input.toCharArray();
+        if (chars[0] == ' ') {
+            System.out.println("can not start with space");
+            return false;
+        }
         for (char c : chars) {
-            if (!Character.isLetter(c)) {
-                System.out.println("Input must contain only letters between (a-z) or (A-Z)");
-                return false;
+            if ((int) c != 32) {
+                if (!Character.isLetter(c)) {
+                    System.out.println("Input must contain only letters between (a-z) or (A-Z)");
+                    return false;
+                }
             }
         }
         return true;
@@ -434,4 +632,16 @@ public class EmployeeMenu {
         }
         return false;
     }
+
+   /* public static void main(String[] args) {
+        String s = "1.1";
+
+        try {
+            System.out.println(NumberUtils.isCreatable(s));
+        } catch (Exception e) {
+            if (e instanceof NumberFormatException) {
+                System.out.println(" eshtebahe");
+            }
+        }
+    }*/
 }

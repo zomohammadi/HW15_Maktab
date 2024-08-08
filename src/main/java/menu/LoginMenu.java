@@ -23,37 +23,37 @@ public class LoginMenu {
     public void showLoginMenu() {
         Scanner input = new Scanner(System.in);
         boolean continueRunning = true;
+        whileContinueRunning:
         while (continueRunning) {
             System.out.println("""
                         Menu:
                         1. Login
                         2. Exit
                     """);
+
+
             System.out.print("Option: ");
-            int option = input.nextInt();
-            input.nextLine();
-           /* System.out.print("Option: ");
             String stringOption = input.nextLine();
             if (stringOption == null || stringOption.isEmpty()) {
                 System.out.println("Input can not be null or empty");
-                return;
+                showLoginMenu();
+                break;
             }
-            char[] chars = stringOption.toCharArray();
-            for (char c : chars) {
-                if (!Character.isDigit(c)) {
-                    System.out.println("input must contain only number between (0-9)");
-                    return;
+            try {
+                Integer option = Integer.parseInt(stringOption);
+
+                switch (option) {
+                    case 1 -> continueRunning = !login(input);
+                    case 2 -> {
+                        token = null;
+                        continueRunning = false;  // Exit the application
+                    }
+                    default -> System.out.println("Wrong option!");
                 }
-            }
-            // input.nextLine();
-            int option = Integer.parseInt(stringOption);*/
-            switch (option) {
-                case 1 -> continueRunning = !login(input);
-                case 2 -> {
-                    token = null;
-                    continueRunning = false;  // Exit the application
+            } catch (Exception e) {
+                if (e instanceof NumberFormatException) {
+                    System.out.println("Wrong option!");
                 }
-                default -> System.out.println("Wrong option!");
             }
         }
     }

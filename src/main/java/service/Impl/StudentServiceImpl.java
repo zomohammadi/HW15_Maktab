@@ -1,46 +1,73 @@
 package service.Impl;
 
 import entity.Student;
+import exception.StudentExceptions;
 import jakarta.persistence.NoResultException;
 import repository.BaseEntityRepository;
 import service.StudentService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
-    private BaseEntityRepository<Student> studentRepository;
+    private final BaseEntityRepository<Student> studentRepository;
 
     public StudentServiceImpl(BaseEntityRepository<Student> studentRepository) {
         this.studentRepository = studentRepository;
     }
 
     @Override
-    public void save(Student employee) {
-       /* try {*/
-            studentRepository.save(employee);
-       /* } catch (Exception e) {
-            System.out.println("not Save" + e.getMessage());
-        }*/
+    public void save(Student student) {
+        try {
+            studentRepository.save(student);
+        } catch (Exception e) {
+            if (e instanceof SQLException) {
+                System.out.println("not Save" + e.getMessage());
+                throw new StudentExceptions.StudentInsertSqlException(e.getMessage(), e);
+            } else {
+                System.out.println("not Save" + e.getMessage());
+            }
+
+        }
     }
 
     @Override
-    public void update(Student employee) {
-        studentRepository.update(employee);
+    public void update(Student student) {
+        try {
+            studentRepository.update(student);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
-    public void delete(Student employee) {
-        studentRepository.delete(employee);
+    public void delete(Long id) {
+        try {
+            Student student = findById(id);
+            studentRepository.delete(student);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public Student findById(Long id) {
-        return studentRepository.findById(id);
+        try {
+            return studentRepository.findById(id);
+        } catch (NoResultException e) {
+            System.out.println("No result found " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public List<Student> findAll() {
-        return studentRepository.findAll();
+        try {
+            return studentRepository.findAll();
+        } catch (NoResultException e) {
+            System.out.println("No result found " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -49,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
 
             return studentRepository.findByUserNameAndPassword(userName, password);
         } catch (NoResultException e) {
-            System.out.println("No result found");
+            System.out.println("No result found " + e.getMessage());
             return null;
         }
     }

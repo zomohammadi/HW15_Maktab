@@ -14,7 +14,6 @@ public class EmployeeRepositoryImpl extends BaseEntityRepositoryImpl<Employee> i
     public Class<Employee> getEntityClass() {
         return Employee.class;
     }
-
 }
 
   /*

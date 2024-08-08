@@ -6,8 +6,8 @@ import repository.CountUnitRepository;
 import service.CountUnitService;
 
 public class CountUnitServiceImpl implements CountUnitService {
-    private BaseEntityRepository<CountUnit> countUnitRepository;
-    private CountUnitRepository countUnitRepository2;
+    private final BaseEntityRepository<CountUnit> countUnitRepository;
+    private final CountUnitRepository countUnitRepository2;
 
     public CountUnitServiceImpl(BaseEntityRepository<CountUnit> countUnitRepository, CountUnitRepository countUnitRepository2) {
         this.countUnitRepository = countUnitRepository;
@@ -17,12 +17,20 @@ public class CountUnitServiceImpl implements CountUnitService {
 
     @Override
     public void save(CountUnit countUnit) {
-        countUnitRepository.save(countUnit);
+        try {
+            countUnitRepository.save(countUnit);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void update(CountUnit countUnit) {
-        countUnitRepository.update(countUnit);
+        try {
+            countUnitRepository.update(countUnit);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -37,7 +45,12 @@ public class CountUnitServiceImpl implements CountUnitService {
 
     @Override
     public CountUnit findCountUnit(Long studentId, Long termId) {
-        return countUnitRepository2.findCountUnit(studentId,termId);
+        try {
+            return countUnitRepository2.findCountUnit(studentId, termId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
 

@@ -31,23 +31,15 @@ public class ItemsMenu {
                         4. Exit
                     """);
             System.out.print("Option: ");
-            int option = input.nextInt();
-            input.nextLine();
-            /*System.out.print("Option: ");
             String stringOption = input.nextLine();
             if (stringOption == null || stringOption.isEmpty()) {
                 System.out.println("Input can not be null or empty");
-                return;
+                showItemMenu(token);
+                break ;
             }
-            char[] chars = stringOption.toCharArray();
-            for (char c : chars) {
-                if (!Character.isDigit(c)) {
-                    System.out.println("input must contain only number between (0-9)");
-                    return;
-                }
-            }
-            // input.nextLine();
-            int option = Integer.parseInt(stringOption);*/
+            try {
+                Integer option = Integer.parseInt(stringOption);
+
             switch (option) {
                 case 1 -> {
                     if (token instanceof Employee) {
@@ -57,7 +49,7 @@ public class ItemsMenu {
                 }
                 case 2 -> {
                     if (token instanceof Teacher) {
-                        // teacherMenu.showStudentMenu(token);
+                         teacherMenu.showTeacherMenu(token);
                     } else
                         System.out.println("you are not authorised! your privilege is: " + token.getClass().getSimpleName());
                 }
@@ -69,6 +61,11 @@ public class ItemsMenu {
                 }
                 case 4 -> condition = false;
                 default -> System.out.println("Wrong option!");
+            }
+            } catch (Exception e) {
+                if (e instanceof NumberFormatException) {
+                    System.out.println("Wrong option!");
+                }
             }
         }
     }

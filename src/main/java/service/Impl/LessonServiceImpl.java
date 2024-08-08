@@ -1,13 +1,14 @@
 package service.Impl;
 
 import entity.Lesson;
+import jakarta.persistence.NoResultException;
 import repository.BaseEntityRepository;
 import service.LessonService;
 
 import java.util.List;
 
 public class LessonServiceImpl implements LessonService {
-    private BaseEntityRepository<Lesson> lessonRepository;
+    private final BaseEntityRepository<Lesson> lessonRepository;
 
     public LessonServiceImpl(BaseEntityRepository<Lesson> lessonRepository) {
         this.lessonRepository = lessonRepository;
@@ -15,27 +16,52 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void save(Lesson lesson) {
-        lessonRepository.save(lesson);
+        try {
+            lessonRepository.save(lesson);
+        } catch (
+                NoResultException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     @Override
     public void update(Lesson lesson) {
-        lessonRepository.update(lesson);
+        try {
+            lessonRepository.update(lesson);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
-    public void delete(Lesson lesson) {
-        lessonRepository.delete(lesson);
+    public void delete(Long id) {
+        try {
+            Lesson lesson = findById(id);
+            lessonRepository.delete(lesson);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public Lesson findById(Long id) {
-        return lessonRepository.findById(id);
+        try {
+            return lessonRepository.findById(id);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public List<Lesson> findAll() {
-        return lessonRepository.findAll();
+        try {
+            return lessonRepository.findAll();
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
 }

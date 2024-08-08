@@ -8,17 +8,13 @@ import service.CourseService;
 import java.util.List;
 
 public class CourseServiceImpl implements CourseService {
-    private CourseRepository courseRepository;
-    private BaseEntityRepository<Course> baseEntityRepositoryCourse;
+    private final CourseRepository courseRepository;
+    private final BaseEntityRepository<Course> baseEntityRepositoryCourse;
 
     public CourseServiceImpl(CourseRepository courseRepository, repository.BaseEntityRepository<Course> baseEntityRepositoryCourse) {
         this.courseRepository = courseRepository;
         this.baseEntityRepositoryCourse = baseEntityRepositoryCourse;
     }
-
-   /*  public CourseServiceImpl(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }*/
 
     @Override
     public List<Course> getCourseInCurrentTerm() {
@@ -27,12 +23,21 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void update(Course course) {
-        baseEntityRepositoryCourse.update(course);
+        try {
+            baseEntityRepositoryCourse.update(course);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public Course findById(Long id) {
-        return baseEntityRepositoryCourse.findById(id);
+        try {
+            return baseEntityRepositoryCourse.findById(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
 

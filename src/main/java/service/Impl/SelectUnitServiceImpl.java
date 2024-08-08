@@ -2,6 +2,7 @@ package service.Impl;
 
 import entity.Course;
 import entity.Student;
+import jakarta.persistence.NoResultException;
 import repository.SelectUnitRepository;
 import service.SelectUnitService;
 import util.ApplicationContext;
@@ -9,7 +10,7 @@ import util.ApplicationContext;
 import java.util.Map;
 
 public class SelectUnitServiceImpl implements SelectUnitService {
-    private SelectUnitRepository selectUnitRepository;
+    private final SelectUnitRepository selectUnitRepository;
 
     public SelectUnitServiceImpl(SelectUnitRepository selectUnitRepository) {
         this.selectUnitRepository = selectUnitRepository;
@@ -17,7 +18,12 @@ public class SelectUnitServiceImpl implements SelectUnitService {
 
     @Override
     public Map<Map<String, Integer>, Double> getLessonWithScore(Long studentId, Long termId) {
-        return selectUnitRepository.getLessonWithScore(studentId, termId);
+        try {
+            return selectUnitRepository.getLessonWithScore(studentId, termId);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -42,13 +48,13 @@ public class SelectUnitServiceImpl implements SelectUnitService {
 
     @Override
     public Integer getMaxSelectUnit(Long studentID, Long termId) {
-        Double avg = null;
+        Double avg;
 
         Integer maxSelectUnit = null;
         if (termId > 1) {
             avg = getAvg(studentID, termId - 1);
-        }else {
-            avg=0.0;
+        } else {
+            avg = 0.0;
         }
         if (avg >= 18.0) {
             maxSelectUnit = 24;
@@ -60,19 +66,13 @@ public class SelectUnitServiceImpl implements SelectUnitService {
 
     @Override
     public void saveUnitSelection(Student student, Course course) {
-       /* Integer maxSelectUnit = getMaxSelectUnit(student.getId(), course.getTerm().getId());
-        if (isPassLessonInPreviousTerms(student.getId(), course)) {
-            System.out.println("can not select  the course! because you pass it in previous terms");
-            return null;
-        } else {
-            Map<Map<String, Integer>, Double> courseInCurrentTerm = getLessonWithScore(student.getId(), course.getTerm().getId());
-
-            if (isLessenSelectedInCurrentSelectUnit(course, courseInCurrentTerm)) return null;
-        }*/
-
-        selectUnitRepository.saveUnitSelection(student, course);
-        course.setCapacity(course.getCapacity() - 1);
-        ApplicationContext.getInstance().getCourseService().update(course);
+        try {
+            selectUnitRepository.saveUnitSelection(student, course);
+            course.setCapacity(course.getCapacity() - 1);
+            ApplicationContext.getInstance().getCourseService().update(course);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
 
 /*
         return maxSelectUnit - course.getLesson().getUnit();*/
@@ -94,6 +94,11 @@ public class SelectUnitServiceImpl implements SelectUnitService {
 
     @Override
     public boolean isPassLessonInPreviousTerms(Long studentId, Course course) {
-        return selectUnitRepository.isPassLessonInPreviousTerms(studentId, course);
+        try {
+            return selectUnitRepository.isPassLessonInPreviousTerms(studentId, course);
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }

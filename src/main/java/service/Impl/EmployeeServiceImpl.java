@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private BaseEntityRepository<Employee> employeeRepository;
+    private final BaseEntityRepository<Employee> employeeRepository;
 
     public EmployeeServiceImpl(BaseEntityRepository<Employee> employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -27,7 +27,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void update(Employee employee) {
-        employeeRepository.update(employee);
+        try {
+            employeeRepository.update(employee);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -42,18 +46,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findById(Long id) {
-        return employeeRepository.findById(id);
+        try {
+            return employeeRepository.findById(id);
+        } catch (Exception e) {
+            System.out.println("not save => " + e.getMessage());
+        }
+        return null;
     }
 
     @Override
     public List<Employee> findAll() {
-        return employeeRepository.findAll();
+        try {
+            return employeeRepository.findAll();
+        } catch (Exception e) {
+            System.out.println("not save => " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public Employee findByUserNameAndPassword(String userName, String password) {
         try {
-
             return employeeRepository.findByUserNameAndPassword(userName, password);
         } catch (NoResultException e) {
             System.out.println("No result found");
