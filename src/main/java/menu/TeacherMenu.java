@@ -69,9 +69,8 @@ public class TeacherMenu {
         Long termId = checkNumber(input);
         if (termId != null) {
             List<Long> studentId = teacherService.showStudentIdListOfTeacherInTerm(token.getId(), termId);
-            if (/*studentId.size() == 0 || */studentId == null) {
-                System.out.println("no fond student! ");
-                return;
+            if (studentId.size() == 0 || studentId == null) {
+                System.out.println("not fond student! ");
             } else {
                 System.out.println("Student List: ");
                 teacherService.showStudentListOfTeacherInTerm(studentId).forEach(System.out::println);
@@ -110,7 +109,6 @@ public class TeacherMenu {
                         }
                     } else {
                         System.out.println("no Student found! ");
-                        return;
                     }
                 }
             }

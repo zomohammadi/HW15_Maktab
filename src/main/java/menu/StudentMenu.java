@@ -65,10 +65,8 @@ public class StudentMenu {
         Long studentId = token.getId();
         Integer maxSelectUnit = selectUnitService
                 .getMaxSelectUnit(studentId, termId);
-        // selectUnit(token,input,courseInCurrentTerm);
 
         System.out.print("Enter the Course Id: ");
-
         Long courseId = checkNumber(input);
         if (courseId != null) {
             Course course = null;
