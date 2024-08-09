@@ -245,7 +245,17 @@ public class EmployeeMenu {
                 teacher.setCode(teacherCode);
             }
         }
-
+        System.out.print("Enter the Base Salary: ");
+        if (String.valueOf(teacher.getTeacherType()).equals("FACULTY_MEMBER")) {
+            String salary = input.nextLine();
+            if (!salary.isEmpty()) {
+                if (!fillInputSalary_v2(salary, 20000000.0, 60000000.0)) {
+                    return;
+                } else {
+                    teacher.setBaseSalary(Double.valueOf(salary));
+                }
+            }
+        }else System.out.println("this base salary can not be update, because the teacher is CONTRACTUAL! ");
         teacherService.update(teacher);
         System.out.println("Updated!");
     }
