@@ -1,9 +1,12 @@
 package menu;
 
+import entity.SelectUnit;
+import entity.Student;
 import entity.Teacher;
 import entity.User;
 import enumration.TeacherType;
 import service.SelectUnitService;
+import service.StudentService;
 import service.TeacherService;
 
 import java.text.NumberFormat;
@@ -14,10 +17,12 @@ public class TeacherMenu {
 
     private final TeacherService teacherService;
     private final SelectUnitService selectUnitService;///////
+    private final StudentService studentService;
 
-    public TeacherMenu(TeacherService teacherService, SelectUnitService selectUnitService) {
+    public TeacherMenu(TeacherService teacherService, SelectUnitService selectUnitService, StudentService studentService) {
         this.teacherService = teacherService;
         this.selectUnitService = selectUnitService;
+        this.studentService = studentService;
     }
 
     public void showTeacherMenu(User token) {
@@ -42,12 +47,10 @@ public class TeacherMenu {
             try {
                 Integer option = Integer.parseInt(stringOption);
 
-
+                sw:
                 switch (option) {
                     case 1 -> showInformation(token);
-                   /* case 2 -> {
-
-                    }*/
+                    case 2 -> scoreRegistration(token,input);
                     case 3 -> showPaySlip(token, input);
                     case 4 -> condition = false;
                     default -> System.out.println("Wrong option!");
@@ -55,6 +58,60 @@ public class TeacherMenu {
             } catch (Exception e) {
                 if (e instanceof NumberFormatException) {
                     System.out.println("Wrong option!");
+                }
+            }
+        }
+
+    }
+
+    private void scoreRegistration(User token, Scanner input) {
+        System.out.print("Enter the TermId: ");
+        Long termId = checkNumber(input);
+        if (termId != null) {
+            List<Long> studentId = teacherService.showStudentIdListOfTeacherInTerm(token.getId(), termId);
+            if (/*studentId.size() == 0 || */studentId == null) {
+                System.out.println("no fond student! ");
+                return;
+            } else {
+                System.out.println("Student List: ");
+                teacherService.showStudentListOfTeacherInTerm(studentId).forEach(System.out::println);
+                System.out.print("Enter the Student Code that you are register Score: ");
+                String studentCode = input.nextLine();
+                if (!fillInputNumbers(studentCode, 5)) {
+                    return;
+                }
+                if (studentCode != null) {
+                    Student student = studentService.findByCode(studentCode);
+                    if (student != null) {
+                        System.out.print("Enter the lessonId: ");
+                        Long lessonId = checkNumber(input);
+                        if (lessonId != null) {
+                            Long selectUnitId = teacherService.getSelectUnitId(token.getId(), termId, student.getId(), lessonId);
+                            SelectUnit selectUnit = selectUnitService.findById(selectUnitId);
+                            if (selectUnit != null) {
+                                System.out.println("enter the Score");
+                                String score = input.nextLine();
+                                char[] chars = score.toCharArray();
+                                for (char c : chars) {
+                                    if (!Character.isDigit(c)) {
+                                        System.out.println("input must contain only numbers between (0-9)");
+                                        break;
+                                    }
+                                }
+                                if (Double.parseDouble(score) > 20 || Double.parseDouble(score) < 0) {
+                                    System.out.println("Enter the correct Score (between 0 and 20)");
+                                    return;
+                                } else {
+                                    selectUnit.setScore(Double.valueOf(score));
+                                    selectUnitService.update(selectUnit);
+                                    System.out.println("Done!");
+                                }
+                            } else System.out.println("no course with student found");
+                        }
+                    } else {
+                        System.out.println("no Student found! ");
+                        return;
+                    }
                 }
             }
         }
@@ -102,5 +159,34 @@ public class TeacherMenu {
             }
         }
         return Long.valueOf(id);
+    }
+
+    private boolean fillInputNumbers_v2(String input, int digit) {
+
+        char[] chars = input.toCharArray();
+        for (char c : chars) {
+            if (!Character.isDigit(c)) {
+                System.out.println("input must contain only numbers between (0-9)");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean fillInputNumbers(String input, int digit) {
+        if (checkedNullInput(input)) return false;
+        if (input.length() != digit) {
+            System.out.println("input must be " + digit + " digit number");
+            return false;
+        }
+        return fillInputNumbers_v2(input, digit);
+    }
+
+    private boolean checkedNullInput(String input) {
+        if (input == null || input.isEmpty()) {
+            System.out.println("Input can not be null or empty");
+            return true;
+        }
+        return false;
     }
 }

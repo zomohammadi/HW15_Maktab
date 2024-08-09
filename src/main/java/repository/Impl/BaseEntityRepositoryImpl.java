@@ -77,6 +77,7 @@ public abstract class BaseEntityRepositoryImpl<T extends BaseEntity> implements 
 
     public abstract Class<T> getEntityClass();
 
+
     public CriteriaBuilder getCriteriaBuilder() {
         return criteriaBuilder;
     }

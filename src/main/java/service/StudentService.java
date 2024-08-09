@@ -11,5 +11,6 @@ public interface StudentService {
     Student findById(Long id);
     List<Student> findAll();
     Student findByUserNameAndPassword(String userName, String password);
+    Student findByCode(String code);
 
 }

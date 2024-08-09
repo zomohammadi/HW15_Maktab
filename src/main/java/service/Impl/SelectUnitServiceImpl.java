@@ -1,8 +1,10 @@
 package service.Impl;
 
 import entity.Course;
+import entity.SelectUnit;
 import entity.Student;
 import jakarta.persistence.NoResultException;
+import repository.BaseEntityRepository;
 import repository.SelectUnitRepository;
 import service.SelectUnitService;
 import util.ApplicationContext;
@@ -11,9 +13,11 @@ import java.util.Map;
 
 public class SelectUnitServiceImpl implements SelectUnitService {
     private final SelectUnitRepository selectUnitRepository;
+    private final BaseEntityRepository<SelectUnit> selectUnitRepositoryBase;
 
-    public SelectUnitServiceImpl(SelectUnitRepository selectUnitRepository) {
+    public SelectUnitServiceImpl(SelectUnitRepository selectUnitRepository, BaseEntityRepository<SelectUnit> selectUnitRepositoryBase) {
         this.selectUnitRepository = selectUnitRepository;
+        this.selectUnitRepositoryBase = selectUnitRepositoryBase;
     }
 
     @Override
@@ -92,6 +96,7 @@ public class SelectUnitServiceImpl implements SelectUnitService {
         return false;
     }
 
+
     @Override
     public boolean isPassLessonInPreviousTerms(Long studentId, Course course) {
         try {
@@ -99,6 +104,24 @@ public class SelectUnitServiceImpl implements SelectUnitService {
         } catch (NoResultException e) {
             System.out.println(e.getMessage());
             return false;
+        }
+    }
+    @Override
+    public void update(SelectUnit selectUnit) {
+        try {
+            selectUnitRepositoryBase.update(selectUnit);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public SelectUnit findById(Long id) {
+        try {
+            return selectUnitRepositoryBase.findById(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 }

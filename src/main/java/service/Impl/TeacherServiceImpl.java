@@ -1,5 +1,6 @@
 package service.Impl;
 
+import entity.Student;
 import entity.Teacher;
 import jakarta.persistence.NoResultException;
 import repository.BaseEntityRepository;
@@ -102,7 +103,8 @@ public class TeacherServiceImpl implements TeacherService {
             return null;
         }
     }
-@Override
+
+    @Override
     public Integer getSumUnits(List<Integer> units) {
         try {
             Integer sum = 0;
@@ -116,4 +118,47 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    @Override
+    public List<Long> showStudentIdListOfTeacherInTerm(Long teacherId, Long termId) {
+        try {
+            return teacherRepository2.showStudentListOfTeacherInTerm(teacherId, termId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Student> showStudentListOfTeacherInTerm(List<Long> studentIds) {
+        try {
+            List<Student> students = new ArrayList<>();
+            for (Long id : studentIds) {
+                Student student = ApplicationContext.getInstance().getStudentService().findById(id);
+                students.add(student);
+            }
+            return students;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Teacher findByCode(String code) {
+        try {
+            return teacherRepository2.findByCode(code);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Long getSelectUnitId(Long teacherId, Long termId, Long studentId,long lessonId) {
+        try {
+            return teacherRepository2.getSelectUnitId(teacherId,termId,studentId,lessonId);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }

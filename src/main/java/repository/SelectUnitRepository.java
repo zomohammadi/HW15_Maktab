@@ -13,4 +13,5 @@ public interface SelectUnitRepository {
    // Double getAvg(Long studentId, Long termId);
    void saveUnitSelection(Student student, Course course);
     boolean isPassLessonInPreviousTerms(Long studentId, Course course);
+
 }

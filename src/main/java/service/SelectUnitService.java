@@ -1,6 +1,7 @@
 package service;
 
 import entity.Course;
+import entity.SelectUnit;
 import entity.Student;
 
 import java.util.Map;
@@ -18,5 +19,8 @@ public interface SelectUnitService {
     Integer getMaxSelectUnit(Long studentID, Long termId);
 
     boolean isLessenSelectedInCurrentSelectUnit(Course course, Map<Map<String, Integer>, Double> courseInCurrentTerm);
+    void update(SelectUnit selectUnit);
+    SelectUnit findById(Long id);
+
 
 }

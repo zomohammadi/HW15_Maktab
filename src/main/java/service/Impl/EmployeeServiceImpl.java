@@ -3,6 +3,7 @@ package service.Impl;
 import entity.Employee;
 import jakarta.persistence.NoResultException;
 import repository.BaseEntityRepository;
+import repository.EmployeeRepository;
 import service.EmployeeService;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final BaseEntityRepository<Employee> employeeRepository;
+    private final EmployeeRepository employeeRepository1;
 
-    public EmployeeServiceImpl(BaseEntityRepository<Employee> employeeRepository) {
+    public EmployeeServiceImpl(BaseEntityRepository<Employee> employeeRepository, EmployeeRepository employeeRepository1) {
         this.employeeRepository = employeeRepository;
+        this.employeeRepository1 = employeeRepository1;
     }
 
 
@@ -70,6 +73,16 @@ public class EmployeeServiceImpl implements EmployeeService {
             return employeeRepository.findByUserNameAndPassword(userName, password);
         } catch (NoResultException e) {
             System.out.println("No result found");
+            return null;
+        }
+    }
+
+    @Override
+    public Employee findByCode(String code) {
+        try {
+            return employeeRepository1.findByCode(code);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }

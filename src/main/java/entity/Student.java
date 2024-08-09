@@ -20,12 +20,12 @@ public class Student extends User {
 
     public static final String TABLE_NAME = "student";
 
-    public static final String STUDENT_CODE = "student_code";
+//    public static final String STUDENT_CODE = "student_code";
     public static final String ENTERING_YEAR = "entering_year";
 
 
-    @Column(name = STUDENT_CODE,unique = true)
-    private String studentCode;
+/*    @Column(name = STUDENT_CODE,unique = true)
+    private String studentCode;*/
 
 
     @Column(name = ENTERING_YEAR)
@@ -39,7 +39,7 @@ public class Student extends User {
                + ", LastName= " + super.getLastName()
                + ", MobileNumber= " + super.getMobileNumber()
                + ", NationalCode= " + super.getNationalCode()
-               + ", studentCode='" + studentCode + '\'' +
+               + ", studentCode= " + super.getCode() +
                ", enteringYear=" + enteringYear +
                '}';
     }

@@ -25,11 +25,11 @@ public class Employee extends User {
 
     public static final String TABLE_NAME = "employee";
 
-    public static final String PERSONNEL_CODE = "personnel_code";
+//    public static final String PERSONNEL_CODE = "personnel_code";
     public static final String SALARY = "salary";
 
-    @Column(name = PERSONNEL_CODE, unique = true)
-    private String PersonnelCode;
+  /*  @Column(name = PERSONNEL_CODE, unique = true)
+    private String PersonnelCode;*/
 
     @Column(name = SALARY)
     private Double salary;
@@ -42,7 +42,7 @@ public class Employee extends User {
                + ", LastName= " + super.getLastName()
                + ", MobileNumber= " + super.getMobileNumber()
                + ", NationalCode= " + super.getNationalCode()
-               + ", PersonnelCode='" + PersonnelCode
+               + ", PersonnelCode= " + super.getCode()
                + ", salary=" + NumberFormat.getInstance().format(salary) +
                "}";
     }

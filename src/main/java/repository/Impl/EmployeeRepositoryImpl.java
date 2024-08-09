@@ -2,7 +2,9 @@
 package repository.Impl;
 
 import entity.Employee;
+import entity.Employee;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import repository.EmployeeRepository;
 
 public class EmployeeRepositoryImpl extends BaseEntityRepositoryImpl<Employee> implements EmployeeRepository {
@@ -13,6 +15,17 @@ public class EmployeeRepositoryImpl extends BaseEntityRepositoryImpl<Employee> i
     @Override
     public Class<Employee> getEntityClass() {
         return Employee.class;
+    }
+
+    @Override
+    public Employee findByCode(String code) {
+
+        TypedQuery<Employee> query = getEntityManager()
+                .createQuery("""
+                                                                    select p from  Employee 
+                                                                     p where p.code = ?1
+                                                                    """, Employee.class);
+        return query.getSingleResult();
     }
 }
 

@@ -22,6 +22,8 @@ public class User extends BaseEntity{
     public static final String MOBILE_NUMBER = "mobile_Number";
     public static final String USERNAME="username";
     public static final String PASSWORD="password";
+    public static final String CODE = "code";
+
 
     @Column(name = FIRST_NAME)
     private String firstName;
@@ -40,5 +42,8 @@ public class User extends BaseEntity{
 
     @Column(name = PASSWORD,nullable = false)
     private String password;
+
+    @Column(name = CODE,unique = true)
+    private String code;
 
 }

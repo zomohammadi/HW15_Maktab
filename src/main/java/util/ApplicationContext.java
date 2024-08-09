@@ -48,22 +48,25 @@ public class ApplicationContext {
         CourseRepository courseRepository = new CourseRepositoryImpl(em);
         CountUnitRepository countUnitRepository = new CountUnitRepositoryImpl(em);
         TeacherRepository teacherRepository1 = new TeacherRepositoryImpl(em);
+        StudentRepository studentRepository1 = new StudentRepositoryImpl(em);
+        EmployeeRepository employeeRepository1 = new EmployeeRepositoryImpl(em);
 
         BaseEntityRepository<Course> baseEntityRepositoryCourse = new CourseRepositoryImpl(em);
         BaseEntityRepository<CountUnit> baseEntityRepositoryCountUnit = new CountUnitRepositoryImpl(em);
+        BaseEntityRepository<SelectUnit> selectUnitRepositoryBase = new SelectUnitRepositoryImpl(em);
 
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+        employeeService = new EmployeeServiceImpl(employeeRepository, employeeRepository1);
         teacherService = new TeacherServiceImpl(teacherRepository, teacherRepository1);
-        studentService = new StudentServiceImpl(studentRepository);
+        studentService = new StudentServiceImpl(studentRepository, studentRepository1);
         lessonService = new LessonServiceImpl(lessonRepository);
 
-        selectUnitService = new SelectUnitServiceImpl(selectUnitRepository);
+        selectUnitService = new SelectUnitServiceImpl(selectUnitRepository, selectUnitRepositoryBase);
         courseService = new CourseServiceImpl(courseRepository, baseEntityRepositoryCourse);
         countUnitService = new CountUnitServiceImpl(baseEntityRepositoryCountUnit, countUnitRepository);
 
         //menu
         this.employeeMenu = new EmployeeMenu(this.employeeService, teacherService, studentService);
-        this.teacherMenu = new TeacherMenu(teacherService, selectUnitService);
+        this.teacherMenu = new TeacherMenu(teacherService, selectUnitService, studentService);
         this.studentMenu = new StudentMenu(this.selectUnitService, this.courseService);
         this.itemsMenu = new ItemsMenu(employeeMenu, teacherMenu, studentMenu);
         this.loginMenu = new LoginMenu(this.employeeService, teacherService, studentService);

@@ -11,5 +11,6 @@ public interface EmployeeService {
     Employee findById(Long id);
     List<Employee> findAll();
     Employee findByUserNameAndPassword(String userName, String password);
+    Employee findByCode(String code);
 
 }

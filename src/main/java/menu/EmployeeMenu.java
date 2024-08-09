@@ -160,8 +160,13 @@ public class EmployeeMenu {
             if (!fillInputNumbers_v2(studentCode, 5)) {
                 return;
             } else {
-                student.setStudentCode(studentCode);
+                student.setCode(studentCode);
             }
+        }
+        Student byCode = studentService.findByCode(studentCode);
+        if (byCode!=null){
+            System.out.println("this code are exists! ");
+            return;
         }
 
         studentService.update(student);
@@ -237,7 +242,7 @@ public class EmployeeMenu {
             if (!fillInputNumbers_v2(teacherCode, 5)) {
                 return;
             } else {
-                teacher.setTeacherCode(teacherCode);
+                teacher.setCode(teacherCode);
             }
         }
 
@@ -299,9 +304,19 @@ public class EmployeeMenu {
         if (checkedNullInput(password)) {
             return;
         }
+        Student std = studentService.findByUserNameAndPassword(username, password);
+        if (std!=null){
+            System.out.println("this username are exists");
+            return;
+        }
         System.out.print("Enter the Student Code (5 digit): ");
         String studentCode = input.nextLine();
         if (!fillInputNumbers(studentCode, 5)) {
+            return;
+        }
+        Student byCode = studentService.findByCode(studentCode);
+        if (byCode!=null){
+            System.out.println("this code are exists! ");
             return;
         }
         System.out.print("Enter the Entry Year (4 digit): ");
@@ -311,7 +326,7 @@ public class EmployeeMenu {
         }
         Student student = Student.builder().firstName(firstName).lastName(lastName).nationalCode(nationalCode)
                 .mobileNumber(mobileNumber).username(username).password(password)
-                .studentCode(studentCode).enteringYear(Integer.valueOf(enteringYear)).build();
+                .code(studentCode).enteringYear(Integer.valueOf(enteringYear)).build();
 
 
         try {
@@ -386,7 +401,7 @@ public class EmployeeMenu {
         }
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).nationalCode(nationalCode)
                 .mobileNumber(mobileNumber).username(username).password(password)
-                .teacherCode(teacherCode).teacherType(TeacherType.valueOf(teacherType))
+                .code(teacherCode).teacherType(TeacherType.valueOf(teacherType))
                 .baseSalary(Double.valueOf(baseSalary)).build();
 
         teacherService.save(teacher);
@@ -462,7 +477,7 @@ public class EmployeeMenu {
             if (!fillInputNumbers_v2(personalCode, 5)) {
                 return;
             } else {
-                employee.setPersonnelCode(personalCode);
+                employee.setCode(personalCode);
             }
         }
 
@@ -540,6 +555,7 @@ public class EmployeeMenu {
             return;
         }
 
+
         System.out.print("Enter the Salary (min => 10000000.0, mx=> 50000000.0 ): ");
         String salary = input.nextLine();
         if (!fillInputSalary(salary, 10000000.0, 50000000.0)) {
@@ -549,7 +565,7 @@ public class EmployeeMenu {
         Employee employee = Employee.builder().firstName(firstName).lastName(lastName)
                 .username(username).password(password)
                 .nationalCode(nationalCode).mobileNumber(mobileNumber)
-                .PersonnelCode(personalCode).salary(Double.valueOf(salary)).build();
+                .code(personalCode).salary(Double.valueOf(salary)).build();
 
 
         employeeService.save(employee);

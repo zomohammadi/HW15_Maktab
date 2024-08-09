@@ -23,13 +23,13 @@ import java.text.NumberFormat;
 public class Teacher extends User {
 
     public static final String TABLE_NAME = "teacher";
-    public static final String TEACHER_CODE = "teacher_code";
+//    public static final String TEACHER_CODE = "teacher_code";
     public static final String TEACHER_TYPE = "teacher_type";
     public static final String BASE_SALARY = "base_salary";
 
 
-    @Column(name = TEACHER_CODE, unique = true)
-    private String teacherCode;
+ /*   @Column(name = TEACHER_CODE, unique = true)
+    private String teacherCode;*/
 
     @Column(name = TEACHER_TYPE)
     @Enumerated(EnumType.STRING)
@@ -45,7 +45,7 @@ public class Teacher extends User {
                + ", LastName= " + super.getLastName()
                + ", MobileNumber= " + super.getMobileNumber()
                + ", NationalCode= " + super.getNationalCode()
-               + ", teacherCode='" + teacherCode +
+               + ", teacherCode= " + super.getCode() +
                ", teacherType=" + teacherType +
                ", baseSalary=" + NumberFormat.getInstance().format(baseSalary) +
                '}';

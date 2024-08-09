@@ -4,6 +4,7 @@ import entity.Student;
 import exception.StudentExceptions;
 import jakarta.persistence.NoResultException;
 import repository.BaseEntityRepository;
+import repository.StudentRepository;
 import service.StudentService;
 
 import java.sql.SQLException;
@@ -11,9 +12,11 @@ import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
     private final BaseEntityRepository<Student> studentRepository;
+    private final StudentRepository studentRepository1;
 
-    public StudentServiceImpl(BaseEntityRepository<Student> studentRepository) {
+    public StudentServiceImpl(BaseEntityRepository<Student> studentRepository, StudentRepository studentRepository1) {
         this.studentRepository = studentRepository;
+        this.studentRepository1 = studentRepository1;
     }
 
     @Override
@@ -77,6 +80,16 @@ public class StudentServiceImpl implements StudentService {
             return studentRepository.findByUserNameAndPassword(userName, password);
         } catch (NoResultException e) {
             System.out.println("No result found " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Student findByCode(String code) {
+        try {
+            return studentRepository1.findByCode(code);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
